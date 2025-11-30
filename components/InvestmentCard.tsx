@@ -58,7 +58,7 @@ export const InvestmentCard: React.FC<InvestmentCardProps> = ({ project }) => {
                 <span className="text-gray-400 block text-xs">Min Investment</span>
                 <span className="font-semibold text-white">${project.minInvestment.toLocaleString()}</span>
             </div>
-            <Link to={`/invest?id=${project.id}`}>
+            <Link to={`/project/${project.id}`}>
                 <Button variant="outline" className="!px-4 !py-2 text-sm">
                     View Details <ArrowRight size={14} className="ml-1" />
                 </Button>

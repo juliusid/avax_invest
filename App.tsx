@@ -5,6 +5,8 @@ import { Home } from './pages/Home';
 import { Invest } from './pages/Invest';
 import { Dashboard } from './pages/Dashboard';
 import { About } from './pages/About';
+import { Archives } from './pages/Archives';
+import { ProjectDetails } from './pages/ProjectDetails';
 import { X, Eye, EyeOff, ShieldCheck, Mail, Lock, User, Globe, Phone, ChevronRight, CheckCircle, Loader2 } from 'lucide-react';
 import { Button } from './components/Button';
 
@@ -406,6 +408,8 @@ const App: React.FC = () => {
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
             <Route path="/invest" element={<Invest />} />
+            <Route path="/archives" element={<Archives />} />
+            <Route path="/project/:id" element={<ProjectDetails />} />
             <Route 
               path="/dashboard" 
               element={isLoggedIn ? <Dashboard /> : <Navigate to="/" replace />} 
