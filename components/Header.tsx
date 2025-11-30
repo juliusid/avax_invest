@@ -43,6 +43,7 @@ export const Header: React.FC<HeaderProps> = ({
             <NavLink to="/" className={navLinkClass}>Home</NavLink>
             <NavLink to="/about" className={navLinkClass}>About</NavLink>
             <NavLink to="/invest" className={navLinkClass}>Invest</NavLink>
+            <NavLink to="/archives" className={navLinkClass}>Archives</NavLink>
             {isLoggedIn && (
               <NavLink to="/dashboard" className={navLinkClass}>Dashboard</NavLink>
             )}
@@ -108,6 +109,13 @@ export const Header: React.FC<HeaderProps> = ({
               className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-800"
             >
               Invest
+            </NavLink>
+            <NavLink 
+              to="/archives" 
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-800"
+            >
+              Archives
             </NavLink>
             {isLoggedIn && (
               <NavLink 

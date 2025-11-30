@@ -3,9 +3,10 @@ import {
   PieChart, Pie, Cell, Tooltip, ResponsiveContainer, 
   AreaChart, Area, XAxis, YAxis, CartesianGrid 
 } from 'recharts';
-import { ArrowUpRight, DollarSign, Sprout, Tractor } from 'lucide-react';
+import { ArrowUpRight, DollarSign, Sprout, Tractor, ArrowRight } from 'lucide-react';
 import { Button } from '../components/Button';
 import { MOCK_PROJECTS } from '../constants';
+import { Link } from 'react-router-dom';
 
 export const Dashboard: React.FC = () => {
   // Mock Data for the dashboard
@@ -193,7 +194,7 @@ export const Dashboard: React.FC = () => {
                   <th className="pb-3 font-medium">Project</th>
                   <th className="pb-3 font-medium">Invested</th>
                   <th className="pb-3 font-medium">Current Value</th>
-                  <th className="pb-3 font-medium text-right">Returns</th>
+                  <th className="pb-3 font-medium text-right">Action</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-700">
@@ -215,7 +216,13 @@ export const Dashboard: React.FC = () => {
                       </td>
                       <td className="py-4 text-gray-300">${invested.toLocaleString()}</td>
                       <td className="py-4 text-white font-medium">${Math.floor(current).toLocaleString()}</td>
-                      <td className="py-4 text-right text-green-500">+{project.roi}%</td>
+                      <td className="py-4 text-right">
+                        <Link to={`/project/${project.id}`}>
+                           <button className="text-farm-500 hover:text-white hover:bg-farm-500/20 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors flex items-center ml-auto gap-1">
+                             View Details <ArrowRight size={12} />
+                           </button>
+                        </Link>
+                      </td>
                     </tr>
                   );
                 })}
