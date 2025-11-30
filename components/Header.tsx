@@ -5,10 +5,17 @@ import { Button } from './Button';
 
 interface HeaderProps {
   isLoggedIn: boolean;
-  onLoginToggle: () => void;
+  onLoginClick: () => void;
+  onSignupClick: () => void;
+  onLogoutClick: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ isLoggedIn, onLoginToggle }) => {
+export const Header: React.FC<HeaderProps> = ({ 
+  isLoggedIn, 
+  onLoginClick, 
+  onSignupClick,
+  onLogoutClick 
+}) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
 
@@ -51,15 +58,15 @@ export const Header: React.FC<HeaderProps> = ({ isLoggedIn, onLoginToggle }) => 
                    </div>
                    <span className="text-sm">John Doe</span>
                 </div>
-                <Button variant="outline" onClick={onLoginToggle} className="!py-1.5 !px-4 text-xs">
+                <Button variant="outline" onClick={onLogoutClick} className="!py-1.5 !px-4 text-xs">
                   Logout
                 </Button>
               </div>
             ) : (
               <>
-                <Button variant="ghost" onClick={onLoginToggle}>Log In</Button>
-                <Button variant="primary" onClick={() => alert("Sign up modal would open here")}>
-                  Sign Up
+                <Button variant="ghost" onClick={onLoginClick}>Log In</Button>
+                <Button variant="primary" onClick={onSignupClick}>
+                  Get Started
                 </Button>
               </>
             )}
@@ -113,11 +120,11 @@ export const Header: React.FC<HeaderProps> = ({ isLoggedIn, onLoginToggle }) => 
             )}
             <div className="pt-4 border-t border-gray-800 flex flex-col gap-3">
                {isLoggedIn ? (
-                 <Button variant="outline" onClick={onLoginToggle} className="w-full justify-center">Logout</Button>
+                 <Button variant="outline" onClick={onLogoutClick} className="w-full justify-center">Logout</Button>
                ) : (
                  <>
-                  <Button variant="secondary" onClick={onLoginToggle} className="w-full justify-center">Log In</Button>
-                  <Button variant="primary" className="w-full justify-center">Sign Up</Button>
+                  <Button variant="secondary" onClick={() => { setIsMobileMenuOpen(false); onLoginClick(); }} className="w-full justify-center">Log In</Button>
+                  <Button variant="primary" onClick={() => { setIsMobileMenuOpen(false); onSignupClick(); }} className="w-full justify-center">Get Started</Button>
                  </>
                )}
             </div>
