@@ -15,6 +15,7 @@ import { Link } from "react-router-dom";
 import { Button } from "../components/Button";
 import { MOCK_PROJECTS } from "../constants";
 import { InvestmentCard } from "../components/InvestmentCard";
+import { FieldArchives } from "../components/FieldArchives";
 
 export const Home: React.FC = () => {
   // Get featured projects (limit to first 3)
@@ -158,6 +159,9 @@ export const Home: React.FC = () => {
           </div>
         </div>
       </section>
+
+      {/* NEW: Field Archives Gallery */}
+      <FieldArchives />
 
       {/* How It Works Section */}
       <section className="py-24 bg-gray-800/30 border-y border-gray-800">
