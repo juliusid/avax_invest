@@ -12,9 +12,7 @@ export const ProjectDetails: React.FC = () => {
     return (
       <div className="min-h-screen pt-32 px-4 text-center">
         <h2 className="text-2xl text-white mb-4">Project not found</h2>
-        <Link to="/invest">
-            <Button variant="primary">Back to Investments</Button>
-        </Link>
+        <Button to="/invest" variant="primary">Back to Investments</Button>
       </div>
     );
   }

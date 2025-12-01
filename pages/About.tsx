@@ -166,9 +166,7 @@ export const About: React.FC = () => {
             Join thousands of investors who are already backing the future of agriculture. Sign up today and browse our exclusive opportunities.
           </p>
           <div className="flex justify-center gap-4">
-            <Link to="/invest">
-              <Button variant="primary" className="px-8 py-3 text-lg">View Opportunities</Button>
-            </Link>
+            <Button to="/invest" variant="primary" className="px-8 py-3 text-lg">View Opportunities</Button>
             <Button variant="outline" className="px-8 py-3 text-lg">Contact Us</Button>
           </div>
         </div>

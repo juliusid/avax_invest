@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Play } from 'lucide-react';
+import { Play, FileText, Download, Sprout, BarChart3 } from 'lucide-react';
 import { Button } from '../components/Button';
 import { Link } from 'react-router-dom';
 
@@ -94,19 +94,49 @@ export const Archives: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen pt-24 pb-12 bg-gray-900">
-      <div className="max-w-7xl mx-auto px-6 md:px-8">
+    <div className="min-h-screen bg-gray-900">
+      
+      {/* Hero Section */}
+      <section className="relative h-[60vh] flex items-center justify-center overflow-hidden">
+        <div 
+          className="absolute inset-0 bg-cover bg-center z-0"
+          style={{ 
+            backgroundImage: 'url("https://images.unsplash.com/photo-1625246333195-78d9c38ad449?q=80&w=2070&auto=format&fit=crop")',
+          }}
+        >
+          <div className="absolute inset-0 bg-gray-900/80 via-gray-900/70 to-gray-900" />
+        </div>
+
+        <div className="relative z-10 max-w-4xl mx-auto px-4 text-center">
+            <Link to="/" className="inline-flex items-center text-farm-500 font-medium mb-6 hover:text-white transition-colors">
+                &larr; Return Home
+            </Link>
+          <h1 className="text-4xl md:text-6xl font-light text-white mb-6 leading-tight font-serif tracking-tight">
+            The Field <span className="text-farm-500 font-normal">Archives</span>
+          </h1>
+          <p className="text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed font-light">
+            A comprehensive chronological record of our agricultural operations, harvest reports, and technological audits from around the globe.
+          </p>
+        </div>
+      </section>
+
+      <div className="max-w-7xl mx-auto px-6 md:px-8 py-24">
         
-        <div className="mb-12 border-b border-gray-800 pb-8">
-            <Link to="/" className="text-farm-500 text-sm font-medium hover:underline mb-4 inline-block">&larr; Back to Home</Link>
-            <h1 className="text-4xl md:text-5xl font-light text-white mb-4">Project Archives</h1>
-            <p className="text-gray-400 max-w-2xl">
-                A complete chronological record of our agricultural operations, audits, and community impact reports.
-            </p>
+        {/* Filter / Header Row */}
+        <div className="flex flex-col md:flex-row justify-between items-end mb-12 border-b border-gray-800 pb-6">
+            <div>
+                <span className="text-farm-500 text-xs font-bold tracking-widest uppercase mb-2 block">Latest Entries</span>
+                <h2 className="text-2xl font-light text-white">Media & Reports</h2>
+            </div>
+            <div className="flex gap-4 mt-4 md:mt-0">
+                <button className="text-sm text-white border-b border-white pb-1">All Records</button>
+                <button className="text-sm text-gray-500 hover:text-white border-b border-transparent pb-1 hover:border-gray-500 transition-colors">Videos</button>
+                <button className="text-sm text-gray-500 hover:text-white border-b border-transparent pb-1 hover:border-gray-500 transition-colors">Reports</button>
+            </div>
         </div>
 
         {/* Archives Container with Overlay Logic */}
-        <div className={`relative transition-all duration-700 ease-in-out ${isExpanded ? '' : 'max-h-[800px] overflow-hidden'}`}>
+        <div className={`relative transition-all duration-1000 ease-in-out ${isExpanded ? '' : 'max-h-[800px] overflow-hidden'}`}>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[300px]">
                 {archiveItems.map((item) => (
@@ -158,12 +188,76 @@ export const Archives: React.FC = () => {
             )}
         </div>
 
-        {/* Content under load more (visible after expansion) */}
-        {isExpanded && (
-            <div className="mt-12 pt-8 border-t border-gray-800 text-center text-gray-500 text-sm animate-in fade-in slide-in-from-bottom-4 duration-700">
-                End of current records. Check back next month for new field updates.
+        {/* RICH CONTENT SECTIONS (Visible below the fold, pushed down when expanded) */}
+        <div className="mt-24 space-y-32">
+            
+            {/* Section 1: Sustainability Report */}
+            <div className="grid md:grid-cols-2 gap-16 items-center">
+                <div className="order-2 md:order-1 relative">
+                     <div className="absolute -inset-4 bg-farm-500/10 rounded-2xl blur-xl"></div>
+                     <img 
+                       src="https://images.unsplash.com/photo-1464226184884-fa280b87c399?q=80&w=2000&auto=format&fit=crop" 
+                       alt="Sustainability Report" 
+                       className="relative w-full rounded-lg shadow-2xl border border-gray-800 grayscale hover:grayscale-0 transition-all duration-700"
+                     />
+                     <div className="absolute bottom-6 -right-6 bg-gray-800 p-4 rounded-lg border border-gray-700 shadow-xl max-w-xs hidden md:block">
+                        <div className="flex items-center gap-3 mb-2">
+                             <Sprout className="text-farm-500" size={20} />
+                             <span className="text-white font-bold text-sm">Carbon Negative</span>
+                        </div>
+                        <p className="text-xs text-gray-400">Our soil regeneration techniques have sequestered 12,000 tons of CO2 this year.</p>
+                     </div>
+                </div>
+                <div className="order-1 md:order-2">
+                    <span className="text-farm-500 text-xs font-bold tracking-widest uppercase mb-4 block">Annual Report</span>
+                    <h2 className="text-3xl md:text-4xl font-serif text-white mb-6">2023 Sustainability Audit</h2>
+                    <p className="text-gray-400 leading-relaxed mb-8">
+                        Beyond yields, we measure success by the health of our soil and the prosperity of our communities. 
+                        Our latest audit reveals a 40% reduction in water usage across our sub-Saharan projects and 
+                        a complete transition to organic fertilizers in our Napa vineyards.
+                    </p>
+                    <div className="flex gap-4">
+                        <Button variant="outline" className="flex items-center gap-2">
+                            <Download size={16} /> Download PDF
+                        </Button>
+                        <Button variant="ghost" className="flex items-center gap-2">
+                            <FileText size={16} /> View Summary
+                        </Button>
+                    </div>
+                </div>
             </div>
-        )}
+
+            {/* Section 2: Technology Integration */}
+            <div className="grid md:grid-cols-2 gap-16 items-center">
+                <div>
+                    <span className="text-blue-500 text-xs font-bold tracking-widest uppercase mb-4 block">Innovation</span>
+                    <h2 className="text-3xl md:text-4xl font-serif text-white mb-6">Technological Integration</h2>
+                    <p className="text-gray-400 leading-relaxed mb-6">
+                        We have deployed 500+ IoT sensors across our key assets to monitor soil moisture, acidity, and nutrient levels in real-time. 
+                        This data-driven approach allows for precision farming that maximizes output while minimizing resource waste.
+                    </p>
+                    <ul className="space-y-4 mb-8">
+                        <li className="flex items-center text-gray-300">
+                            <BarChart3 className="text-blue-500 mr-3" size={18} />
+                            <span>Real-time yield forecasting models</span>
+                        </li>
+                        <li className="flex items-center text-gray-300">
+                            <Sprout className="text-blue-500 mr-3" size={18} />
+                            <span>Automated irrigation controls</span>
+                        </li>
+                    </ul>
+                </div>
+                <div className="relative">
+                     <div className="absolute -inset-4 bg-blue-500/10 rounded-2xl blur-xl"></div>
+                     <img 
+                       src="https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?auto=format&fit=crop&w=800&q=80" 
+                       alt="AgTech Lab" 
+                       className="relative w-full rounded-lg shadow-2xl border border-gray-800 grayscale hover:grayscale-0 transition-all duration-700"
+                     />
+                </div>
+            </div>
+
+        </div>
 
       </div>
     </div>

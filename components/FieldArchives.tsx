@@ -21,10 +21,11 @@ export const FieldArchives: React.FC = () => {
               Our extraordinary collection brings together real-time data, drone surveys, and harvest reports from our global sites.
             </p>
             <div className="mt-8">
-               <Link to="/archives">
-                 <button className="flex items-center gap-2 text-white border-b border-farm-500 pb-1 hover:text-farm-500 transition-colors uppercase text-xs tracking-widest font-medium">
-                    Explore the full Archive <ArrowUpRight size={14} />
-                 </button>
+               <Link 
+                 to="/archives" 
+                 className="flex items-center gap-2 text-white border-b border-farm-500 pb-1 hover:text-farm-500 transition-colors uppercase text-xs tracking-widest font-medium w-fit cursor-pointer"
+               >
+                  Explore the full Archive <ArrowUpRight size={14} />
                </Link>
             </div>
           </div>

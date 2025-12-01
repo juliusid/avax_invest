@@ -11,7 +11,6 @@ import {
   ShieldCheck,
   Banknote,
 } from "lucide-react";
-import { Link } from "react-router-dom";
 import { Button } from "../components/Button";
 import { MOCK_PROJECTS } from "../constants";
 import { InvestmentCard } from "../components/InvestmentCard";
@@ -59,22 +58,20 @@ export const Home: React.FC = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link to="/invest">
-              <Button
-                variant="primary"
-                className="text-lg px-10 py-4 h-auto w-full sm:w-auto shadow-farm-500/40"
-              >
-                Start Investing
-              </Button>
-            </Link>
-            <Link to="/about">
-                <Button
-                variant="outline"
-                className="text-lg px-10 py-4 h-auto w-full sm:w-auto border-white text-white hover:bg-white/10 hover:text-white hover:border-white"
-                >
-                How it Works
-                </Button>
-            </Link>
+            <Button
+              to="/invest"
+              variant="primary"
+              className="text-lg px-10 py-4 h-auto w-full sm:w-auto shadow-farm-500/40"
+            >
+              Start Investing
+            </Button>
+            <Button
+              to="/about"
+              variant="outline"
+              className="text-lg px-10 py-4 h-auto w-full sm:w-auto border-white text-white hover:bg-white/10 hover:text-white hover:border-white"
+            >
+              How it Works
+            </Button>
           </div>
         </div>
 
@@ -144,12 +141,10 @@ export const Home: React.FC = () => {
                 Diversify your portfolio with tangible growth.
               </p>
             </div>
-            <Link to="/invest">
-              <Button variant="outline" className="group">
-                View All Assets{" "}
-                <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </Button>
-            </Link>
+            <Button to="/invest" variant="outline" className="group">
+              View All Assets{" "}
+              <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </Button>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -420,14 +415,13 @@ export const Home: React.FC = () => {
             <Button variant="primary" className="text-lg px-8 py-4">
               Create Free Account
             </Button>
-            <Link to="/invest">
-              <Button
-                variant="outline"
-                className="text-lg px-8 py-4 border-white text-white hover:bg-white hover:text-gray-900"
-              >
-                Explore Investments
-              </Button>
-            </Link>
+            <Button
+              to="/invest"
+              variant="outline"
+              className="text-lg px-8 py-4 border-white text-white hover:bg-white hover:text-gray-900"
+            >
+              Explore Investments
+            </Button>
           </div>
         </div>
       </section>

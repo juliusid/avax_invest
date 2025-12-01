@@ -217,10 +217,11 @@ export const Dashboard: React.FC = () => {
                       <td className="py-4 text-gray-300">${invested.toLocaleString()}</td>
                       <td className="py-4 text-white font-medium">${Math.floor(current).toLocaleString()}</td>
                       <td className="py-4 text-right">
-                        <Link to={`/project/${project.id}`}>
-                           <button className="text-farm-500 hover:text-white hover:bg-farm-500/20 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors flex items-center ml-auto gap-1">
-                             View Details <ArrowRight size={12} />
-                           </button>
+                        <Link 
+                          to={`/project/${project.id}`}
+                          className="text-farm-500 hover:text-white hover:bg-farm-500/20 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors flex items-center ml-auto gap-1 w-fit"
+                        >
+                           View Details <ArrowRight size={12} />
                         </Link>
                       </td>
                     </tr>
