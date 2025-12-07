@@ -11,7 +11,7 @@ import {
   ShieldCheck,
   Banknote,
 } from "lucide-react";
-import { Button } from "../components/Button";
+import { Button } from "../components/Button.jsx";
 import { MOCK_PROJECTS } from "../constants";
 import { InvestmentCard } from "../components/InvestmentCard";
 import { FieldArchives } from "../components/FieldArchives";

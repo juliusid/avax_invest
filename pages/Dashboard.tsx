@@ -1,37 +1,69 @@
-import React from 'react';
-import { 
-  PieChart, Pie, Cell, Tooltip, ResponsiveContainer, 
-  AreaChart, Area, XAxis, YAxis, CartesianGrid 
-} from 'recharts';
-import { ArrowUpRight, DollarSign, Sprout, Tractor, ArrowRight } from 'lucide-react';
-import { Button } from '../components/Button';
-import { MOCK_PROJECTS } from '../constants';
-import { Link } from 'react-router-dom';
+import React from "react";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  ResponsiveContainer,
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+} from "recharts";
+import {
+  ArrowUpRight,
+  DollarSign,
+  Sprout,
+  Tractor,
+  ArrowRight,
+} from "lucide-react";
+import { Button } from "../components/Button";
+import { MOCK_PROJECTS } from "../constants";
+import { Link } from "react-router-dom";
 
 export const Dashboard: React.FC = () => {
   // Mock Data for the dashboard
   const portfolioData = [
-    { name: 'Grains', value: 45000 },
-    { name: 'Vineyards', value: 25000 },
-    { name: 'Livestock', value: 15000 },
-    { name: 'Citrus', value: 10000 },
+    { name: "Grains", value: 45000 },
+    { name: "Vineyards", value: 25000 },
+    { name: "Livestock", value: 15000 },
+    { name: "Citrus", value: 10000 },
   ];
 
-  const COLORS = ['#22c55e', '#3b82f6', '#eab308', '#a855f7'];
+  const COLORS = ["#22c55e", "#3b82f6", "#eab308", "#a855f7"];
 
   const growthData = [
-    { month: 'Jan', value: 85000 },
-    { month: 'Feb', value: 87500 },
-    { month: 'Mar', value: 89000 },
-    { month: 'Apr', value: 88500 },
-    { month: 'May', value: 92000 },
-    { month: 'Jun', value: 95000 },
+    { month: "Jan", value: 85000 },
+    { month: "Feb", value: 87500 },
+    { month: "Mar", value: 89000 },
+    { month: "Apr", value: 88500 },
+    { month: "May", value: 92000 },
+    { month: "Jun", value: 95000 },
   ];
 
   const recentActivity = [
-    { id: 1, action: "Dividend Received", project: "Emerald Valley Corn", amount: "+$1,250", date: "2 days ago" },
-    { id: 2, action: "Investment", project: "Alpine Dairy Pastures", amount: "-$10,000", date: "1 week ago" },
-    { id: 3, action: "Harvest Update", project: "Napa Organic Vine", amount: "Info", date: "2 weeks ago" },
+    {
+      id: 1,
+      action: "Dividend Received",
+      project: "Emerald Valley Corn",
+      amount: "+$1,250",
+      date: "2 days ago",
+    },
+    {
+      id: 2,
+      action: "Investment",
+      project: "Alpine Dairy Pastures",
+      amount: "-$10,000",
+      date: "1 week ago",
+    },
+    {
+      id: 3,
+      action: "Harvest Update",
+      project: "Napa Organic Vine",
+      amount: "Info",
+      date: "2 weeks ago",
+    },
   ];
 
   return (
@@ -39,7 +71,9 @@ export const Dashboard: React.FC = () => {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
         <div>
           <h1 className="text-3xl font-bold text-white">Welcome back, John</h1>
-          <p className="text-gray-400">Here's what's happening with your farm portfolio today.</p>
+          <p className="text-gray-400">
+            Here's what's happening with your farm portfolio today.
+          </p>
         </div>
         <Button variant="primary">Add Funds</Button>
       </div>
@@ -84,40 +118,50 @@ export const Dashboard: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
         {/* Growth Chart */}
         <div className="lg:col-span-2 bg-gray-800 p-6 rounded-xl border border-gray-700 shadow-lg">
-          <h3 className="text-xl font-bold text-white mb-6">Portfolio Growth</h3>
+          <h3 className="text-xl font-bold text-white mb-6">
+            Portfolio Growth
+          </h3>
           <div className="h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={growthData}>
                 <defs>
                   <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#22c55e" stopOpacity={0.3}/>
-                    <stop offset="95%" stopColor="#22c55e" stopOpacity={0}/>
+                    <stop offset="5%" stopColor="#22c55e" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="#22c55e" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#374151" vertical={false} />
-                <XAxis 
-                  dataKey="month" 
-                  stroke="#9ca3af" 
-                  tickLine={false} 
-                  axisLine={false} 
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke="#374151"
+                  vertical={false}
                 />
-                <YAxis 
-                  stroke="#9ca3af" 
-                  tickLine={false} 
-                  axisLine={false} 
-                  tickFormatter={(value) => `$${value/1000}k`}
+                <XAxis
+                  dataKey="month"
+                  stroke="#9ca3af"
+                  tickLine={false}
+                  axisLine={false}
                 />
-                <Tooltip 
-                  contentStyle={{ backgroundColor: '#1f2937', borderColor: '#374151', color: '#fff' }}
-                  itemStyle={{ color: '#22c55e' }}
+                <YAxis
+                  stroke="#9ca3af"
+                  tickLine={false}
+                  axisLine={false}
+                  tickFormatter={(value) => `$${value / 1000}k`}
                 />
-                <Area 
-                  type="monotone" 
-                  dataKey="value" 
-                  stroke="#22c55e" 
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "#1f2937",
+                    borderColor: "#374151",
+                    color: "#fff",
+                  }}
+                  itemStyle={{ color: "#22c55e" }}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="value"
+                  stroke="#22c55e"
                   strokeWidth={2}
-                  fillOpacity={1} 
-                  fill="url(#colorValue)" 
+                  fillOpacity={1}
+                  fill="url(#colorValue)"
                 />
               </AreaChart>
             </ResponsiveContainer>
@@ -126,7 +170,9 @@ export const Dashboard: React.FC = () => {
 
         {/* Allocation Chart */}
         <div className="bg-gray-800 p-6 rounded-xl border border-gray-700 shadow-lg">
-          <h3 className="text-xl font-bold text-white mb-2">Asset Allocation</h3>
+          <h3 className="text-xl font-bold text-white mb-2">
+            Asset Allocation
+          </h3>
           <div className="h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
@@ -140,23 +186,38 @@ export const Dashboard: React.FC = () => {
                   dataKey="value"
                 >
                   {portfolioData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={COLORS[index % COLORS.length]}
+                    />
                   ))}
                 </Pie>
-                <Tooltip 
-                   contentStyle={{ backgroundColor: '#1f2937', borderColor: '#374151', color: '#fff' }}
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "#1f2937",
+                    borderColor: "#374151",
+                    color: "#fff",
+                  }}
                 />
               </PieChart>
             </ResponsiveContainer>
           </div>
           <div className="space-y-3">
             {portfolioData.map((entry, index) => (
-              <div key={index} className="flex items-center justify-between text-sm">
+              <div
+                key={index}
+                className="flex items-center justify-between text-sm"
+              >
                 <div className="flex items-center">
-                  <div className="w-3 h-3 rounded-full mr-2" style={{ backgroundColor: COLORS[index % COLORS.length] }}></div>
+                  <div
+                    className="w-3 h-3 rounded-full mr-2"
+                    style={{ backgroundColor: COLORS[index % COLORS.length] }}
+                  ></div>
                   <span className="text-gray-300">{entry.name}</span>
                 </div>
-                <span className="text-white font-medium">${entry.value.toLocaleString()}</span>
+                <span className="text-white font-medium">
+                  ${entry.value.toLocaleString()}
+                </span>
               </div>
             ))}
           </div>
@@ -169,24 +230,39 @@ export const Dashboard: React.FC = () => {
           <h3 className="text-xl font-bold text-white mb-6">Recent Activity</h3>
           <div className="space-y-6">
             {recentActivity.map((activity) => (
-              <div key={activity.id} className="flex items-start justify-between pb-4 border-b border-gray-700 last:border-0 last:pb-0">
+              <div
+                key={activity.id}
+                className="flex items-start justify-between pb-4 border-b border-gray-700 last:border-0 last:pb-0"
+              >
                 <div>
                   <p className="text-white font-medium">{activity.action}</p>
                   <p className="text-sm text-gray-400">{activity.project}</p>
                   <p className="text-xs text-gray-500 mt-1">{activity.date}</p>
                 </div>
-                <span className={`text-sm font-bold ${activity.amount.startsWith('+') ? 'text-green-500' : activity.amount.startsWith('-') ? 'text-white' : 'text-blue-500'}`}>
+                <span
+                  className={`text-sm font-bold ${
+                    activity.amount.startsWith("+")
+                      ? "text-green-500"
+                      : activity.amount.startsWith("-")
+                      ? "text-white"
+                      : "text-blue-500"
+                  }`}
+                >
                   {activity.amount}
                 </span>
               </div>
             ))}
           </div>
-          <Button variant="ghost" className="w-full mt-4 text-sm">View All History</Button>
+          <Button variant="ghost" className="w-full mt-4 text-sm">
+            View All History
+          </Button>
         </div>
 
         {/* Your Investments List */}
         <div className="lg:col-span-2 bg-gray-800 p-6 rounded-xl border border-gray-700 shadow-lg">
-          <h3 className="text-xl font-bold text-white mb-6">Your Investments</h3>
+          <h3 className="text-xl font-bold text-white mb-6">
+            Your Investments
+          </h3>
           <div className="overflow-x-auto">
             <table className="w-full text-left">
               <thead>
@@ -201,27 +277,42 @@ export const Dashboard: React.FC = () => {
                 {MOCK_PROJECTS.slice(0, 3).map((project, idx) => {
                   // Simulate some investment data based on mock projects
                   const invested = [20000, 15000, 10000][idx];
-                  const current = invested * (1 + (project.roi / 100));
-                  
+                  const current = invested * (1 + project.roi / 100);
+
                   return (
-                    <tr key={project.id} className="group hover:bg-gray-700/30 transition-colors">
+                    <tr
+                      key={project.id}
+                      className="group hover:bg-gray-700/30 transition-colors"
+                    >
                       <td className="py-4">
                         <div className="flex items-center gap-3">
-                          <img src={project.imageUrl} alt="" className="w-10 h-10 rounded-lg object-cover" />
+                          <img
+                            src={project.imageUrl}
+                            alt=""
+                            className="w-10 h-10 rounded-lg object-cover"
+                          />
                           <div>
-                            <p className="font-medium text-white">{project.title}</p>
-                            <p className="text-xs text-gray-400">{project.category}</p>
+                            <p className="font-medium text-white">
+                              {project.title}
+                            </p>
+                            <p className="text-xs text-gray-400">
+                              {project.category}
+                            </p>
                           </div>
                         </div>
                       </td>
-                      <td className="py-4 text-gray-300">${invested.toLocaleString()}</td>
-                      <td className="py-4 text-white font-medium">${Math.floor(current).toLocaleString()}</td>
+                      <td className="py-4 text-gray-300">
+                        ${invested.toLocaleString()}
+                      </td>
+                      <td className="py-4 text-white font-medium">
+                        ${Math.floor(current).toLocaleString()}
+                      </td>
                       <td className="py-4 text-right">
-                        <Link 
+                        <Link
                           to={`/project/${project.id}`}
                           className="text-farm-500 hover:text-white hover:bg-farm-500/20 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors flex items-center ml-auto gap-1 w-fit"
                         >
-                           View Details <ArrowRight size={12} />
+                          View Details <ArrowRight size={12} />
                         </Link>
                       </td>
                     </tr>
