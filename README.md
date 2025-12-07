@@ -19,3 +19,4 @@ View your app in AI Studio: https://ai.studio/apps/drive/15O98y9GNMk5f_AGw19IZRX
 3. Run the app:
    `npm run dev`
 # avax_invest
+# avax_invest
