@@ -1,25 +1,58 @@
-import React, { useState, useMemo } from "react";
-import { Filter, Search, SlidersHorizontal } from "lucide-react";
-import { MOCK_PROJECTS } from "../constants";
+import React, { useState, useMemo, useEffect } from "react";
+import { Filter, Search, SlidersHorizontal, Loader2 } from "lucide-react";
+import { investmentApi } from "../api/investments"; // ✅ Import API
 import { InvestmentCard } from "../components/InvestmentCard";
 
 export const Invest: React.FC = () => {
+  const [projects, setProjects] = useState<any[]>([]); // Real Data State
+  const [loading, setLoading] = useState(true);
+
   const [searchTerm, setSearchTerm] = useState("");
   const [minInvestmentFilter, setMinInvestmentFilter] = useState<number>(0);
   const [categoryFilter, setCategoryFilter] = useState<string>("All");
 
+  // 1. Fetch Real Data
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const { data } = await investmentApi.getAll();
+        if (data.success) {
+          setProjects(data.data.projects);
+        }
+      } catch (error) {
+        console.error("Failed to fetch projects", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProjects();
+  }, []);
+
+  // 2. Filter Logic (Updated for Backend Keys)
   const filteredProjects = useMemo(() => {
-    return MOCK_PROJECTS.filter((project) => {
+    return projects.filter((project) => {
+      const price = parseFloat(project.min_investment);
+
       const matchesSearch =
         project.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         project.location.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesInvestment = project.minInvestment >= minInvestmentFilter;
+
+      const matchesInvestment = price >= minInvestmentFilter;
+
       const matchesCategory =
         categoryFilter === "All" || project.category === categoryFilter;
 
       return matchesSearch && matchesInvestment && matchesCategory;
     });
-  }, [searchTerm, minInvestmentFilter, categoryFilter]);
+  }, [searchTerm, minInvestmentFilter, categoryFilter, projects]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen pt-32 flex justify-center">
+        <Loader2 className="w-10 h-10 text-farm-500 animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
@@ -72,9 +105,11 @@ export const Invest: React.FC = () => {
                 className="w-full bg-gray-900 border border-gray-700 rounded-lg py-2 px-3 text-white focus:outline-none focus:border-farm-500 text-sm appearance-none cursor-pointer"
               >
                 <option value="All">All Assets</option>
-                <option value="Farming">Farming</option>
-                <option value="Vineyard">Vineyard</option>
+                <option value="Farming">Crop Farming</option>
                 <option value="Livestock">Livestock</option>
+                <option value="Poultry">Poultry</option>
+                <option value="Vineyard">Vineyard</option>
+                <option value="Machinery">Machinery</option>
               </select>
             </div>
 
@@ -83,13 +118,13 @@ export const Invest: React.FC = () => {
               <label className="flex justify-between text-xs font-medium text-gray-400 mb-2 uppercase tracking-wider">
                 <span>Min Investment</span>
                 <span className="text-white">
-                  ${minInvestmentFilter.toLocaleString()}
+                  ₦{minInvestmentFilter.toLocaleString()}
                 </span>
               </label>
               <input
                 type="range"
                 min="0"
-                max="20000"
+                max="50000"
                 step="1000"
                 value={minInvestmentFilter}
                 onChange={(e) =>
@@ -97,10 +132,6 @@ export const Invest: React.FC = () => {
                 }
                 className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-farm-500"
               />
-              <div className="flex justify-between text-xs text-gray-600 mt-1">
-                <span>$0</span>
-                <span>$20k+</span>
-              </div>
             </div>
           </div>
         </aside>
