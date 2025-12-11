@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { NavLink, useLocation, Link } from "react-router-dom";
 import { Sprout, Menu, X, User } from "lucide-react";
 import { Button } from "./Button";
+import logo from "../assets/logos/LOGO HORIZONTAL GREEN.svg";
 
 export const Header = ({
   isLoggedIn,
@@ -28,12 +29,13 @@ export const Header = ({
             to="/"
             className="flex-shrink-0 flex items-center gap-2 cursor-pointer"
           >
-            <div className="w-10 h-10 bg-farm-500 rounded-lg flex items-center justify-center shadow-lg shadow-farm-500/20">
-              <Sprout className="w-6 h-6 text-white" />
-            </div>
-            <span className="text-xl font-bold tracking-tight text-white">
+            {/* <div className="w-10 h-10 bg-farm-500 rounded-lg flex items-center justify-center shadow-lg shadow-farm-500/20"> */}
+            {/* <Sprout className="w-6 h-6 text-white" /> */}
+            {/* </div> */}
+            <img src={logo} className="h-10 object-contain" />
+            {/* <span className="text-xl font-bold tracking-tight text-white">
               FarmStock
-            </span>
+            </span> */}
           </NavLink>
 
           {/* Desktop Nav */}

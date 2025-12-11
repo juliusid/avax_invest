@@ -8,7 +8,7 @@ import {
   verifyPhoneOTP,
   resendEmailCode,
   resendPhoneCode,
-} from "../api/auth";
+} from "../api/auth.js"; // Corrected import to .js
 
 const AuthContext = createContext(null);
 
@@ -16,16 +16,30 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // ✅ New function to re-fetch and set the user
+  const refreshUser = async () => {
+    try {
+      const data = await getCurrentUser();
+      if (data.success) {
+        setUser(data.data.user);
+      } else {
+        setUser(null);
+      }
+      return data;
+    } catch (error) {
+      console.error("Failed to refresh user:", error);
+      setUser(null);
+      throw error;
+    }
+  };
+
   // Check auth on load
   useEffect(() => {
     const initAuth = async () => {
       try {
-        const data = await getCurrentUser();
-        if (data.success) {
-          setUser(data.data.user);
-        }
+        await refreshUser();
       } catch (error) {
-        setUser(null); // Not logged in
+        // Handled in refreshUser
       } finally {
         setLoading(false);
       }
@@ -62,7 +76,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // ✅ NEW: Verification Wrappers
+  // Verification Wrappers
   const verifyEmail = async (token) => verifyEmailToken(token);
   const verifyPhone = async (phone, otp) => verifyPhoneOTP(phone, otp);
   const resendEmail = async (email) => resendEmailCode(email);
@@ -80,6 +94,7 @@ export const AuthProvider = ({ children }) => {
         verifyPhone,
         resendEmail,
         resendPhone,
+        refreshUser, // ✅ Exposed to consumers
       }}
     >
       {children}

@@ -5,30 +5,33 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import { Header } from "./components/Header.jsx";
+
+// --- Components ---
+import { Header } from "./components/Header";
+// NOTE: Ensure this filename matches exactly (Authmodal vs AuthModal)
+import { AuthModal } from "./components/Authmodal.jsx";
+import { VerificationModal } from "./components/VerificationModal.jsx";
+import { NotificationToast } from "./components/NotificationToast"; // ✅ NEW: Notification UI
+
+// --- Contexts ---
+import { AuthProvider, useAuth } from "./contexts/AuthContext.jsx";
+import { NotificationProvider } from "./contexts/NotificationContext"; // ✅ NEW: Notification Logic
+
+// --- Pages ---
 import { Home } from "./pages/Home";
 import { Invest } from "./pages/Invest.jsx";
 import { Dashboard } from "./pages/Dashboard.jsx";
 import { About } from "./pages/About";
 import { Archives } from "./pages/Archives";
 import { ProjectDetails } from "./pages/ProjectDetails";
-import { Profile } from "./pages/Profile"; // 1. Added Profile Import
-import { AuthProvider, useAuth } from "./contexts/AuthContext.jsx";
-import { AuthModal } from "./components/AuthModal.jsx";
-import { VerificationModal } from "./components/VerificationModal.jsx";
-
-// 2. Added Notification Imports from frontend changes
-import { NotificationProvider } from "./contexts/NotificationContext";
-import { NotificationToast } from "./components/NotificationToast";
+import { Profile } from "./pages/Profile"; // ✅ NEW: Profile Page
 
 const AppContent = () => {
   const { user, logout } = useAuth(); // Keeps your real backend session
 
-  // Auth Modal State
+  // --- EXISTING STATE: Auth & Verification ---
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState("login");
-
-  // Verification Modal State
   const [isVerifyModalOpen, setIsVerifyModalOpen] = useState(false);
   const [verifyData, setVerifyData] = useState({ email: "", phone: "" });
 
@@ -42,10 +45,11 @@ const AppContent = () => {
     setIsAuthModalOpen(true);
   };
 
+  // This function connects the AuthModal to the VerificationModal
   const triggerVerification = (email, phone) => {
     setVerifyData({ email, phone });
-    setIsAuthModalOpen(false);
-    setIsVerifyModalOpen(true);
+    setIsAuthModalOpen(false); // Close login/signup
+    setIsVerifyModalOpen(true); // Open OTP modal
   };
 
   return (
@@ -58,6 +62,7 @@ const AppContent = () => {
           onLogoutClick={logout}
         />
 
+        {/* --- MODALS --- */}
         <AuthModal
           isOpen={isAuthModalOpen}
           initialMode={authMode}
@@ -72,7 +77,8 @@ const AppContent = () => {
           phone={verifyData.phone}
         />
 
-        {/* 3. New Toast Component for notifications */}
+        {/* ✅ NEW: Notification Toast Component */}
+        {/* This displays the popups triggered by the backend/context */}
         <NotificationToast />
 
         <main className="flex-grow">
@@ -83,12 +89,13 @@ const AppContent = () => {
             <Route path="/archives" element={<Archives />} />
             <Route path="/project/:id" element={<ProjectDetails />} />
 
-            {/* 4. Added Protected Profile Route */}
+            {/* ✅ NEW: Protected Profile Route */}
             <Route
               path="/profile"
               element={user ? <Profile /> : <Navigate to="/" replace />}
             />
 
+            {/* Existing Protected Dashboard */}
             <Route
               path="/dashboard"
               element={user ? <Dashboard /> : <Navigate to="/" replace />}
@@ -121,7 +128,7 @@ const AppContent = () => {
 
 const App = () => {
   return (
-    // 5. Wrap everything with BOTH Providers
+    // ✅ NEW: Wrapped with NotificationProvider inside AuthProvider
     <AuthProvider>
       <NotificationProvider>
         <AppContent />

@@ -1,8 +1,14 @@
 import React from "react";
-import { MapPin, TrendingUp, Clock, ArrowRight } from "lucide-react";
+import { MapPin, TrendingUp, Clock, ArrowRight, Layers } from "lucide-react";
 import { Button } from "./Button.jsx";
 
 export const InvestmentCard = ({ project }) => {
+  // --- MOCK LOGIC FOR SLOTS ---
+  // We assume a hypothetical total of 500 slots per project for the demo
+  const totalSlots = 500;
+  const slotsSold = Math.floor(totalSlots * (project.fundedPercent / 100));
+  const slotsLeft = totalSlots - slotsSold;
+
   return (
     <div className="group bg-gray-800 rounded-xl overflow-hidden shadow-xl hover:shadow-2xl hover:shadow-farm-500/10 transition-all duration-300 border border-gray-700 hover:border-farm-500/30 flex flex-col h-full">
       {/* Image Container */}
@@ -12,11 +18,22 @@ export const InvestmentCard = ({ project }) => {
           alt={project.title}
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
         />
+
+        {/* Existing Category Badge (Top Left) */}
         <div className="absolute top-3 left-3 bg-black/60 backdrop-blur-sm px-3 py-1 rounded-full border border-white/10">
           <span className="text-xs font-semibold text-white tracking-wide uppercase">
             {project.category}
           </span>
         </div>
+
+        {/* ✅ NEW: Slots Badge (Top Right) */}
+        <div className="absolute top-3 right-3 bg-farm-600/90 backdrop-blur-sm px-3 py-1 rounded-full border border-white/10 shadow-lg">
+          <span className="text-xs font-bold text-white flex items-center gap-1">
+            <Layers size={12} />
+            {slotsLeft} Slots Left
+          </span>
+        </div>
+
         <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-gray-900 to-transparent opacity-80" />
       </div>
 
@@ -56,7 +73,8 @@ export const InvestmentCard = ({ project }) => {
 
         <div className="mt-auto pt-4 border-t border-gray-700 flex items-center justify-between">
           <div className="text-sm">
-            <span className="text-gray-400 block text-xs">Min Investment</span>
+            {/* ✅ CHANGED: From 'Min Investment' to 'Per Slot' */}
+            <span className="text-gray-400 block text-xs">Per Slot</span>
             <span className="font-semibold text-white">
               ${project.minInvestment.toLocaleString()}
             </span>

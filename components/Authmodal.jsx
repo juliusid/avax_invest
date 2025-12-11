@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { Button } from "./Button.jsx";
 import { useAuth } from "../contexts/AuthContext.jsx";
+import { useNotification } from "../contexts/NotificationContext"; // ✅ 1. Import Notification Hook
 
 export const AuthModal = ({
   isOpen,
@@ -21,6 +22,7 @@ export const AuthModal = ({
   onVerificationNeeded,
 }) => {
   const { login, signup } = useAuth();
+  const { showNotification } = useNotification(); // ✅ 2. Use the hook
   const [mode, setMode] = useState(initialMode);
   const [signupStep, setSignupStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
@@ -66,16 +68,22 @@ export const AuthModal = ({
     setError("");
 
     try {
-      // Pass email/password arguments directly
       await login(formData.email, formData.password);
+
+      // ✅ 3. Show Success Toast
+      showNotification("success", "Login Successful! Welcome back.");
+
       onClose();
     } catch (err) {
-      // ✅ Handle "Not Verified" login error
+      // Handle "Not Verified" login error
       if (
         err.response?.data?.errorCode === "EMAIL_NOT_VERIFIED" ||
         err.response?.data?.errorCode === "PHONE_NOT_VERIFIED"
       ) {
         const { email, phone } = err.response.data.data;
+
+        // ✅ 4. Notify user why they are being moved
+        showNotification("warning", "Please verify your account to continue.");
         onVerificationNeeded(email, phone);
         return;
       }
@@ -84,6 +92,8 @@ export const AuthModal = ({
         err.response?.data?.message ||
         "Login failed. Please check credentials.";
       setError(msg);
+      // Optional: show error toast too
+      // showNotification("error", msg);
     } finally {
       setIsLoading(false);
     }
@@ -102,21 +112,29 @@ export const AuthModal = ({
     setError("");
 
     try {
-      // ✅ Fix: Remove 'code' from payload
       const { code, ...registrationData } = formData;
       await signup(registrationData);
 
-      // ✅ Instead of alert, trigger the verification modal
+      // ✅ 5. Show Success Toast
+      showNotification(
+        "success",
+        "Account created! Please verify your details."
+      );
+
+      // Trigger verification flow
       onVerificationNeeded(formData.email, formData.phone);
     } catch (err) {
-      // ✅ Handle "User Exists" (Conflict) error
+      // Handle "User Exists" (Conflict) error
       if (err.response && err.response.status === 409) {
-        alert("You already have an account! Please Log In instead.");
-        setMode("login"); // Switch to Login
+        // ✅ 6. Use Toast instead of Alert
+        showNotification("info", "You already have an account. Please Log In.");
+
+        setMode("login");
         setSignupStep(1);
       } else {
         const msg = err.response?.data?.message || "Registration failed.";
         setError(msg);
+        showNotification("error", msg);
       }
     } finally {
       setIsLoading(false);
@@ -133,6 +151,7 @@ export const AuthModal = ({
   const passwordColor =
     formData.password.length > 8 ? "text-green-500" : "text-yellow-500";
 
+  // ... (Render/Return section remains the same) ...
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center px-4">
       <div

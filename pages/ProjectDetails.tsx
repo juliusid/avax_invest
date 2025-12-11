@@ -1,20 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { MOCK_PROJECTS } from "../constants";
 import { Button } from "../components/Button.jsx";
+import { useNotification } from "../contexts/NotificationContext"; // Optional: for feedback
 import {
   MapPin,
-  TrendingUp,
-  Clock,
   ShieldCheck,
-  PieChart,
   Info,
   ArrowLeft,
+  Minus,
+  Plus,
 } from "lucide-react";
 
 export const ProjectDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const { showNotification } = useNotification();
   const project = MOCK_PROJECTS.find((p) => p.id === Number(id));
+
+  // ✅ NEW: Slot State
+  const [slots, setSlots] = useState(1);
 
   if (!project) {
     return (
@@ -26,6 +30,31 @@ export const ProjectDetails: React.FC = () => {
       </div>
     );
   }
+
+  // --- MOCK SLOT CALCULATIONS ---
+  const pricePerSlot = project.minInvestment;
+  const totalSlots = 500; // Mock total
+  const slotsSold = Math.floor(totalSlots * (project.fundedPercent / 100));
+  const slotsLeft = totalSlots - slotsSold;
+
+  const investmentTotal = slots * pricePerSlot;
+
+  // Handlers
+  const incrementSlots = () => {
+    if (slots < slotsLeft) setSlots((prev) => prev + 1);
+  };
+
+  const decrementSlots = () => {
+    if (slots > 1) setSlots((prev) => prev - 1);
+  };
+
+  const handleInvest = () => {
+    // Mock Investment Action
+    showNotification?.(
+      "success",
+      `Investment initiated for ${slots} slots ($${investmentTotal.toLocaleString()})`
+    );
+  };
 
   return (
     <div className="min-h-screen bg-gray-900 pt-24 pb-12">
@@ -75,7 +104,7 @@ export const ProjectDetails: React.FC = () => {
               </div>
               <div className="bg-gray-800/50 p-4 rounded-xl border border-gray-700">
                 <p className="text-gray-400 text-xs uppercase tracking-wide mb-1">
-                  Min Investment
+                  Price Per Slot
                 </p>
                 <p className="text-2xl font-bold text-white">
                   ${project.minInvestment.toLocaleString()}
@@ -92,11 +121,9 @@ export const ProjectDetails: React.FC = () => {
               </div>
               <div className="bg-gray-800/50 p-4 rounded-xl border border-gray-700">
                 <p className="text-gray-400 text-xs uppercase tracking-wide mb-1">
-                  Funded
+                  Available Slots
                 </p>
-                <p className="text-2xl font-bold text-white">
-                  {project.fundedPercent}%
-                </p>
+                <p className="text-2xl font-bold text-white">{slotsLeft}</p>
               </div>
             </div>
 
@@ -150,7 +177,7 @@ export const ProjectDetails: React.FC = () => {
             </div>
           </div>
 
-          {/* Sidebar Action */}
+          {/* Sidebar Action (SLOT SELECTION) */}
           <div className="lg:col-span-1">
             <div className="bg-gray-800 rounded-xl p-6 border border-gray-700 sticky top-24">
               <div className="mb-6">
@@ -166,21 +193,67 @@ export const ProjectDetails: React.FC = () => {
                 </div>
               </div>
 
-              <div className="space-y-4 mb-6">
-                <div className="flex justify-between items-center text-sm">
-                  <span className="text-gray-400">Min. Investment</span>
-                  <span className="text-white font-medium">
-                    ${project.minInvestment.toLocaleString()}
+              {/* ✅ SLOT SELECTOR UI */}
+              <div className="bg-gray-700/30 rounded-lg p-4 mb-6 border border-gray-700">
+                <div className="flex justify-between items-center mb-3">
+                  <span className="text-gray-300 font-medium">
+                    Select Slots
+                  </span>
+                  <span className="text-xs text-farm-400 bg-farm-400/10 px-2 py-1 rounded">
+                    {slotsLeft} Available
                   </span>
                 </div>
+
+                <div className="flex items-center justify-between bg-gray-900 rounded-lg p-1 border border-gray-600 mb-4">
+                  <button
+                    onClick={decrementSlots}
+                    disabled={slots <= 1}
+                    className="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-white hover:bg-gray-800 rounded-md transition-colors disabled:opacity-50"
+                  >
+                    <Minus size={18} />
+                  </button>
+                  <div className="text-xl font-bold text-white w-12 text-center">
+                    {slots}
+                  </div>
+                  <button
+                    onClick={incrementSlots}
+                    disabled={slots >= slotsLeft}
+                    className="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-white hover:bg-gray-800 rounded-md transition-colors disabled:opacity-50"
+                  >
+                    <Plus size={18} />
+                  </button>
+                </div>
+
+                <div className="space-y-2 text-sm border-t border-gray-700 pt-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-400">Price per Slot</span>
+                    <span className="text-white">
+                      ${pricePerSlot.toLocaleString()}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center pt-1">
+                    <span className="text-gray-300 font-bold">Total</span>
+                    <span className="text-xl font-bold text-farm-500">
+                      ${investmentTotal.toLocaleString()}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-4 mb-6">
                 <div className="flex justify-between items-center text-sm">
                   <span className="text-gray-400">Processing Fee</span>
                   <span className="text-white font-medium">1.5%</span>
                 </div>
               </div>
 
-              <Button variant="primary" className="w-full py-4 text-lg mb-3">
-                Invest Now
+              <Button
+                variant="primary"
+                className="w-full py-4 text-lg mb-3"
+                onClick={handleInvest}
+                disabled={slotsLeft === 0}
+              >
+                {slotsLeft === 0 ? "Sold Out" : "Invest Now"}
               </Button>
               <p className="text-center text-xs text-gray-500">
                 By clicking Invest Now, you agree to our Terms of Service.
