@@ -30,6 +30,7 @@ export const Home: React.FC = () => {
           style={{
             backgroundImage:
               'url("https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=2832&auto=format&fit=crop")',
+            // 'url("../assets/img/bg.jpeg")',
           }}
         >
           {/* Overlay */}

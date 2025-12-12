@@ -75,18 +75,3 @@ export const uploadKycDocument = async (docId, file) => {
   const response = await client.post("/kyc/upload", formData);
   return response.data;
 };
-
-export const investments = {
-  // Admin
-  create: (data) => client.post("/admin/invest/projects", data),
-  listAdmin: () => client.get("/admin/invest/projects"),
-  updateStatus: (id, status) =>
-    client.patch(`/admin/invest/projects/${id}/status`, { status }),
-
-  // User (Public/Protected)
-  // Your route file says: router.get("/projects", listProjects);
-  getAll: () => client.get("/investments/projects"),
-  getOne: (id) => client.get(`/investments/projects/${id}`),
-  invest: (data) => client.post("/investments/invest", data),
-  getPortfolio: () => client.get("/investments/portfolio"),
-};

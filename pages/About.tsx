@@ -9,6 +9,7 @@ import {
   Sprout,
 } from "lucide-react";
 import { Button } from "../components/Button";
+import pawpaw from "../assets/img/plants.jpeg";
 
 export const About: React.FC = () => {
   return (
@@ -93,10 +94,12 @@ export const About: React.FC = () => {
           <div className="relative">
             <div className="absolute -inset-4 bg-farm-500/20 rounded-2xl blur-lg"></div>
             <img
-              src="https://images.unsplash.com/photo-1595841696677-6489ff3f8cd1?q=80&w=2070&auto=format&fit=crop"
+              // src="https://images.unsplash.com/photo-1595841696677-6489ff3f8cd1?q=80&w=2070&auto=format&fit=crop"
+              src={pawpaw}
               alt="Hands holding soil"
               className="relative rounded-2xl shadow-2xl border border-gray-700 w-full h-auto object-cover"
             />
+            <div className="absolute inset-0 bg-gray-900/50" />
           </div>
         </div>
       </section>

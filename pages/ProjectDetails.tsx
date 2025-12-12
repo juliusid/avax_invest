@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { investmentApi } from "../api/investments"; // ✅ Import API
+import { investmentApi } from "../api/investments"; // ✅ Make sure this imports correctly
 import { Button } from "../components/Button.jsx";
 import { useNotification } from "../contexts/NotificationContext";
 import {
@@ -13,7 +13,7 @@ import {
   Loader2,
 } from "lucide-react";
 
-// Image Helper
+// Helper for image URLs
 const getImageUrl = (url: string) => {
   if (!url) return "https://via.placeholder.com/800x600?text=No+Image";
   if (url.startsWith("http")) return url;
@@ -22,17 +22,15 @@ const getImageUrl = (url: string) => {
 
 export const ProjectDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const { showNotification } = useNotification();
   const navigate = useNavigate();
+  const { showNotification } = useNotification();
 
   const [project, setProject] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [investing, setInvesting] = useState(false);
-
-  // ✅ Slot State
   const [slots, setSlots] = useState(1);
 
-  // 1. Fetch Project Details
+  // 1. Fetch Real Data
   useEffect(() => {
     const fetchProject = async () => {
       try {
@@ -43,13 +41,13 @@ export const ProjectDetails: React.FC = () => {
       } catch (error) {
         console.error("Error fetching project", error);
         showNotification("error", "Failed to load project details");
-        // navigate('/invest'); // Optional: redirect back
+        navigate("/invest");
       } finally {
         setLoading(false);
       }
     };
     fetchProject();
-  }, [id, showNotification]);
+  }, [id, navigate, showNotification]);
 
   if (loading)
     return (
@@ -60,10 +58,25 @@ export const ProjectDetails: React.FC = () => {
   if (!project) return null;
 
   // 2. Real Calculations
-  const pricePerSlot = parseFloat(project.min_investment);
-  const slotsLeft = project.slots_left; // Backend sends this
+  // Backend sends: min_investment, total_slots, raised_amount, target_amount
+  const pricePerSlot = parseFloat(project.min_investment || 0);
+
+  // Calculate Slots Left based on backend data
+  // If backend sends 'slots_left', use it. Otherwise calculate.
+  const slotsSold = Math.floor(
+    parseFloat(project.raised_amount) / pricePerSlot
+  );
+  const slotsLeft =
+    project.slots_left !== undefined
+      ? project.slots_left
+      : project.total_slots - slotsSold;
+
   const investmentTotal = slots * pricePerSlot;
-  const progressPercent = (project.raised_amount / project.target_amount) * 100;
+
+  // Progress Calculation
+  const progressPercent =
+    (parseFloat(project.raised_amount) / parseFloat(project.target_amount)) *
+    100;
 
   // Handlers
   const incrementSlots = () => {
@@ -77,7 +90,6 @@ export const ProjectDetails: React.FC = () => {
   const handleInvest = async () => {
     setInvesting(true);
     try {
-      // ✅ Call Real Backend Endpoint
       const { data } = await investmentApi.invest({
         projectId: project.id,
         slots: slots,
@@ -85,12 +97,10 @@ export const ProjectDetails: React.FC = () => {
 
       if (data.success) {
         showNotification("success", "Investment Successful!");
-        navigate("/dashboard"); // Go to dashboard to see it
+        navigate("/dashboard");
       }
     } catch (error: any) {
-      const msg =
-        error.response?.data?.message ||
-        "Investment failed. Check your wallet balance.";
+      const msg = error.response?.data?.message || "Investment failed.";
       showNotification("error", msg);
     } finally {
       setInvesting(false);
@@ -116,17 +126,14 @@ export const ProjectDetails: React.FC = () => {
           />
           <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/40 to-transparent"></div>
           <div className="absolute bottom-0 left-0 p-8">
-            <div className="flex items-center gap-2 mb-3">
-              <span className="bg-farm-500/90 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide backdrop-blur-sm">
-                {project.category}
-              </span>
-              <span className="bg-gray-800/80 text-gray-300 text-xs font-medium px-3 py-1 rounded-full flex items-center backdrop-blur-sm">
-                <MapPin size={12} className="mr-1" /> {project.location}
-              </span>
-            </div>
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-2">
-              {project.title}
+              {project.title.charAt(0).toUpperCase() + project.title.slice(1)}
             </h1>
+            <div className="flex items-center gap-2 mb-3 text-gray-300">
+              <MapPin size={16} className="text-farm-500" />
+              {project.location.charAt(0).toUpperCase() +
+                project.location.slice(1)}
+            </div>
           </div>
         </div>
 
@@ -145,9 +152,9 @@ export const ProjectDetails: React.FC = () => {
               </div>
               <div className="bg-gray-800/50 p-4 rounded-xl border border-gray-700">
                 <p className="text-gray-400 text-xs uppercase tracking-wide mb-1">
-                  Per Slot
+                  Per {project.unit_name.toUpperCase()}
                 </p>
-                <p className="text-2xl font-bold text-white">
+                <p className="text-xl font-bold text-white">
                   ₦{pricePerSlot.toLocaleString()}
                 </p>
               </div>
@@ -157,12 +164,12 @@ export const ProjectDetails: React.FC = () => {
                 </p>
                 <p className="text-2xl font-bold text-white">
                   {project.duration_months}{" "}
-                  <span className="text-sm font-normal text-gray-400">mos</span>
+                  <span className="text-sm font-normal text-gray-400">Mo</span>
                 </p>
               </div>
               <div className="bg-gray-800/50 p-4 rounded-xl border border-gray-700">
                 <p className="text-gray-400 text-xs uppercase tracking-wide mb-1">
-                  Available Slots
+                  Available {project.unit_name.toUpperCase()}
                 </p>
                 <p className="text-2xl font-bold text-white">{slotsLeft}</p>
               </div>
@@ -174,11 +181,12 @@ export const ProjectDetails: React.FC = () => {
                 Project Overview
               </h3>
               <p className="text-gray-300 leading-relaxed whitespace-pre-wrap">
-                {project.description}
+                {project.description.charAt(0).toUpperCase() +
+                  project.description.slice(1)}
               </p>
             </div>
 
-            {/* Risk & Security (Static for now) */}
+            {/* Risk Section */}
             <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
               <h3 className="text-xl font-bold text-white mb-4 flex items-center">
                 <ShieldCheck className="mr-2 text-farm-500" /> Security & Risk
@@ -190,8 +198,7 @@ export const ProjectDetails: React.FC = () => {
                     className="text-blue-500 mt-0.5 flex-shrink-0"
                   />
                   <span>
-                    This investment is backed by real agricultural assets and
-                    verified by our team.
+                    This investment is verified. All assets are insured.
                   </span>
                 </li>
               </ul>
@@ -223,11 +230,13 @@ export const ProjectDetails: React.FC = () => {
                 </div>
               </div>
 
-              {/* SLOT SELECTOR */}
+              {/* ✅ SLOT SELECTOR UI */}
               <div className="bg-gray-700/30 rounded-lg p-4 mb-6 border border-gray-700">
                 <div className="flex justify-between items-center mb-3">
                   <span className="text-gray-300 font-medium">
-                    Select Slots
+                    Select{" "}
+                    {project.unit_name.charAt(0).toUpperCase() +
+                      project.unit_name.slice(1)}
                   </span>
                   <span className="text-xs text-farm-400 bg-farm-400/10 px-2 py-1 rounded">
                     {slotsLeft} Available
@@ -256,7 +265,11 @@ export const ProjectDetails: React.FC = () => {
 
                 <div className="space-y-2 text-sm border-t border-gray-700 pt-3">
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-400">Price per Slot</span>
+                    <span className="text-gray-400">
+                      Price per{" "}
+                      {project.unit_name.charAt(0).toUpperCase() +
+                        project.unit_name.slice(1)}
+                    </span>
                     <span className="text-white">
                       ₦{pricePerSlot.toLocaleString()}
                     </span>
@@ -272,7 +285,7 @@ export const ProjectDetails: React.FC = () => {
 
               <Button
                 variant="primary"
-                className="w-full py-4 text-lg mb-3 flex justify-center"
+                className="w-full py-4 text-lg mb-3"
                 onClick={handleInvest}
                 disabled={
                   investing || slotsLeft === 0 || project.status !== "open"
@@ -286,9 +299,6 @@ export const ProjectDetails: React.FC = () => {
                   "Invest Now"
                 )}
               </Button>
-              <p className="text-center text-xs text-gray-500">
-                Secure transaction processed via your Wallet.
-              </p>
             </div>
           </div>
         </div>
