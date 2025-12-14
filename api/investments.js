@@ -4,9 +4,13 @@ export const investmentApi = {
   // Get all public projects
   getAll: () => api.get("/investments/projects"),
 
-  // Get single project details
-  getOne: (id) => api.get(`/investments/projects/${id}`),
+  // Get single project
+  getById: (id) => api.get(`/investments/projects/${id}`),
 
-  // Invest in a project (Buy Slots)
-  invest: (data) => api.post("/investments/invest", data),
+  // ✅ ADD THIS: Get User Portfolio
+  getPortfolio: () => api.get("/investments/portfolio"), // Check routes/investments.js to confirm path matches
+
+  // Invest
+  initialize: (data) => api.post("/investments/initialize", data),
+  verify: (data) => api.post("/investments/verify", data),
 };

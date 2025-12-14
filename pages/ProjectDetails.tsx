@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { investmentApi } from "../api/investments";
-import { Button } from "../components/Button.jsx";
+import { Button } from "../components/Button"; // Check extension .tsx or .jsx
 import { useNotification } from "../contexts/NotificationContext";
-import { useAuth } from "../contexts/AuthContext"; // ✅ New Import
-import { usePaystackPayment } from "react-paystack"; // ✅ New Import
+import { useAuth } from "../contexts/AuthContext";
 import {
   MapPin,
   ShieldCheck,
@@ -15,7 +14,7 @@ import {
   Loader2,
 } from "lucide-react";
 
-// Helper for image URLs
+// Image Helper
 const getImageUrl = (url: string) => {
   if (!url) return "https://via.placeholder.com/800x600?text=No+Image";
   if (url.startsWith("http")) return url;
@@ -26,23 +25,20 @@ export const ProjectDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { showNotification } = useNotification();
-  const { user } = useAuth(); // ✅ Get user for email
+  const { user } = useAuth();
 
   const [project, setProject] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [investing, setInvesting] = useState(false);
   const [slots, setSlots] = useState(1);
 
-  // 1. Fetch Real Data (Keep logic as is)
+  // Fetch Project
   useEffect(() => {
     const fetchProject = async () => {
       try {
         const { data } = await investmentApi.getOne(id);
-        if (data.success) {
-          setProject(data.data.project);
-        }
+        if (data.success) setProject(data.data.project);
       } catch (error) {
-        console.error("Error fetching project", error);
         showNotification("error", "Failed to load project details");
         navigate("/invest");
       } finally {
@@ -60,9 +56,8 @@ export const ProjectDetails: React.FC = () => {
     );
   if (!project) return null;
 
-  // 2. Real Calculations (Keep logic as is)
+  // Calculations
   const pricePerSlot = parseFloat(project.min_investment || 0);
-
   const slotsSold = Math.floor(
     parseFloat(project.raised_amount) / pricePerSlot
   );
@@ -70,96 +65,41 @@ export const ProjectDetails: React.FC = () => {
     project.slots_left !== undefined
       ? project.slots_left
       : project.total_slots - slotsSold;
-
   const investmentTotal = slots * pricePerSlot;
-
   const progressPercent =
     (parseFloat(project.raised_amount) / parseFloat(project.target_amount)) *
     100;
 
-  // 3. Handlers (Slots logic)
   const incrementSlots = () => {
     if (slots < slotsLeft) setSlots((prev) => prev + 1);
   };
-
   const decrementSlots = () => {
     if (slots > 1) setSlots((prev) => prev - 1);
   };
 
-  // 4. Paystack Configuration
-  const config = {
-    // Unique reference ID
-    reference: new Date().getTime().toString(),
-    // Must use user's email for production
-    email: user?.email || "guest@farm.com",
-    // Amount in Kobo
-    amount: Math.round(investmentTotal * 100),
-    // !!! REPLACE THIS WITH YOUR REAL PUBLIC KEY !!!
-    publicKey:
-      process.env.VITE_PAYSTACK_PUBLIC_KEY || "pk_test_xxxxxxxxxxxxxxxxxxxx",
-    metadata: {
-      custom_fields: [
-        { display_name: "Project ID", variable_name: "project_id", value: id },
-      ],
-    },
-  };
+  // ✅ NEW HANDLER: Initialize & Redirect
+  const handleInvestClick = async () => {
+    if (!user) return showNotification("error", "Please login to invest");
 
-  // Initialize Paystack hook
-  const initializePayment = usePaystackPayment(config);
-
-  // 5. Paystack Success Callback
-  const onPaystackSuccess = async (reference: any) => {
     setInvesting(true);
-    showNotification(
-      "info",
-      "Payment received. Verifying transaction...",
-      "top-right"
-    );
     try {
-      // Send reference (proof of payment) to backend for verification
-      const { data } = await investmentApi.invest({
+      // 1. Get Paystack URL from Backend
+      const { data } = await investmentApi.initialize({
         projectId: project.id,
         slots: slots,
-        paymentReference: reference.reference, // ✅ This is the crucial field
+        // Tell Backend where to send user after payment
+        callbackUrl: `${window.location.origin}/verify-investment`,
       });
 
-      if (data.success) {
-        showNotification(
-          "success",
-          data.message || "Investment successfully verified!",
-          "top-right"
-        );
-        navigate("/dashboard");
+      if (data.success && data.data.authorization_url) {
+        // 2. Redirect to Paystack
+        window.location.href = data.data.authorization_url;
       }
     } catch (error: any) {
-      const msg =
-        error.response?.data?.message ||
-        "Verification failed. Check your network.";
-      showNotification("error", msg, "top-right");
-    } finally {
+      const msg = error.response?.data?.message || "Failed to start payment";
+      showNotification("error", msg);
       setInvesting(false);
     }
-  };
-
-  // 6. Main Button Handler
-  const handleInvestClick = () => {
-    if (!user || !user.email) {
-      return showNotification(
-        "error",
-        "You must be logged in with a verified account to invest.",
-        "top-right"
-      );
-    }
-
-    // Disable interaction while Paystack is loading
-    setInvesting(true);
-
-    // Initialize the payment popup
-    initializePayment(
-      onPaystackSuccess,
-      // On Close Callback
-      () => setInvesting(false)
-    );
   };
 
   return (
@@ -167,9 +107,9 @@ export const ProjectDetails: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <Link
           to="/invest"
-          className="inline-flex items-center text-gray-400 hover:text-white mb-6 transition-colors"
+          className="inline-flex items-center text-gray-400 hover:text-white mb-6"
         >
-          <ArrowLeft size={16} className="mr-2" /> Back to Opportunities
+          <ArrowLeft size={16} className="mr-2" /> Back
         </Link>
 
         {/* Hero Section */}
@@ -181,170 +121,109 @@ export const ProjectDetails: React.FC = () => {
           />
           <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/40 to-transparent"></div>
           <div className="absolute bottom-0 left-0 p-8">
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-2">
-              {project.title.charAt(0).toUpperCase() + project.title.slice(1)}
-            </h1>
-            <div className="flex items-center gap-2 mb-3 text-gray-300">
-              <MapPin size={16} className="text-farm-500" />
-              {project.location.charAt(0).toUpperCase() +
-                project.location.slice(1)}
+            <h1 className="text-4xl font-bold text-white">{project.title}</h1>
+            <div className="flex items-center text-gray-300 mt-2">
+              <MapPin size={16} className="text-farm-500 mr-2" />{" "}
+              {project.location}
             </div>
           </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Main Content */}
+          {/* Left Column: Details */}
           <div className="lg:col-span-2 space-y-8">
-            {/* Stats Grid */}
+            <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
+              <h3 className="text-xl font-bold text-white mb-4">Overview</h3>
+              <p className="text-gray-300 whitespace-pre-wrap">
+                {project.description}
+              </p>
+            </div>
+            {/* Stats */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="bg-gray-800/50 p-4 rounded-xl border border-gray-700">
-                <p className="text-gray-400 text-xs uppercase tracking-wide mb-1">
-                  Target ROI
-                </p>
+              <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
+                <span className="text-gray-400 text-xs uppercase">ROI</span>
                 <p className="text-2xl font-bold text-farm-500">
                   {project.roi_percentage}%
                 </p>
               </div>
-              <div className="bg-gray-800/50 p-4 rounded-xl border border-gray-700">
-                <p className="text-gray-400 text-xs uppercase tracking-wide mb-1">
-                  Per {project.unit_name.toUpperCase()}
+              <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
+                <span className="text-gray-400 text-xs uppercase">
+                  Duration
+                </span>
+                <p className="text-2xl font-bold text-white">
+                  {project.duration_months} Mo
                 </p>
+              </div>
+              <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
+                <span className="text-gray-400 text-xs uppercase">
+                  Unit Cost
+                </span>
                 <p className="text-xl font-bold text-white">
                   ₦{pricePerSlot.toLocaleString()}
                 </p>
               </div>
-              <div className="bg-gray-800/50 p-4 rounded-xl border border-gray-700">
-                <p className="text-gray-400 text-xs uppercase tracking-wide mb-1">
-                  Duration
-                </p>
-                <p className="text-2xl font-bold text-white">
-                  {project.duration_months}{" "}
-                  <span className="text-sm font-normal text-gray-400">Mo</span>
-                </p>
-              </div>
-              <div className="bg-gray-800/50 p-4 rounded-xl border border-gray-700">
-                <p className="text-gray-400 text-xs uppercase tracking-wide mb-1">
-                  Available {project.unit_name.toUpperCase()}
-                </p>
+              <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
+                <span className="text-gray-400 text-xs uppercase">Left</span>
                 <p className="text-2xl font-bold text-white">{slotsLeft}</p>
               </div>
             </div>
-
-            {/* Description */}
-            <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
-              <h3 className="text-xl font-bold text-white mb-4">
-                Project Overview
-              </h3>
-              <p className="text-gray-300 leading-relaxed whitespace-pre-wrap">
-                {project.description.charAt(0).toUpperCase() +
-                  project.description.slice(1)}
-              </p>
-            </div>
-
-            {/* Risk Section */}
-            <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
-              <h3 className="text-xl font-bold text-white mb-4 flex items-center">
-                <ShieldCheck className="mr-2 text-farm-500" /> Security & Risk
-              </h3>
-              <ul className="space-y-3 text-gray-300">
-                <li className="flex items-start gap-3">
-                  <Info
-                    size={18}
-                    className="text-blue-500 mt-0.5 flex-shrink-0"
-                  />
-                  <span>
-                    This investment is verified. All assets are insured.
-                  </span>
-                </li>
-              </ul>
-            </div>
           </div>
 
-          {/* Sidebar Action (SLOT SELECTION) */}
+          {/* Right Column: Investment Action */}
           <div className="lg:col-span-1">
             <div className="bg-gray-800 rounded-xl p-6 border border-gray-700 sticky top-24">
+              {/* Progress */}
               <div className="mb-6">
                 <div className="flex justify-between text-sm text-gray-400 mb-2">
-                  <span>Funding Progress</span>
+                  <span>Funded</span>
                   <span>{progressPercent.toFixed(1)}%</span>
                 </div>
                 <div className="w-full bg-gray-700 rounded-full h-2">
                   <div
-                    className="bg-farm-500 h-2 rounded-full transition-all duration-1000"
+                    className="bg-farm-500 h-2 rounded-full"
                     style={{ width: `${Math.min(progressPercent, 100)}%` }}
                   ></div>
                 </div>
-                <div className="flex justify-between mt-2 text-xs text-gray-500">
-                  <span>
-                    Raised: ₦
-                    {parseFloat(project.raised_amount).toLocaleString()}
-                  </span>
-                  <span>
-                    Goal: ₦{parseFloat(project.target_amount).toLocaleString()}
-                  </span>
-                </div>
               </div>
 
-              {/* SLOT SELECTOR UI */}
+              {/* Slot Selector */}
               <div className="bg-gray-700/30 rounded-lg p-4 mb-6 border border-gray-700">
-                <div className="flex justify-between items-center mb-3">
-                  <span className="text-gray-300 font-medium">
-                    Select{" "}
-                    {project.unit_name.charAt(0).toUpperCase() +
-                      project.unit_name.slice(1)}
-                  </span>
-                  <span className="text-xs text-farm-400 bg-farm-400/10 px-2 py-1 rounded">
-                    {slotsLeft} Available
+                <div className="flex justify-between items-center mb-4">
+                  <span className="text-gray-300">Select Slots</span>
+                  <span className="text-xs bg-farm-500/20 text-farm-400 px-2 py-1 rounded">
+                    {slotsLeft} available
                   </span>
                 </div>
-
                 <div className="flex items-center justify-between bg-gray-900 rounded-lg p-1 border border-gray-600 mb-4">
                   <button
                     onClick={decrementSlots}
-                    disabled={slots <= 1 || investing}
-                    className="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-white hover:bg-gray-800 rounded-md transition-colors disabled:opacity-50"
+                    disabled={slots <= 1}
+                    className="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-white"
                   >
                     <Minus size={18} />
                   </button>
-                  <div className="text-xl font-bold text-white w-12 text-center">
-                    {slots}
-                  </div>
+                  <span className="text-xl font-bold text-white">{slots}</span>
                   <button
                     onClick={incrementSlots}
-                    disabled={slots >= slotsLeft || investing}
-                    className="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-white hover:bg-gray-800 rounded-md transition-colors disabled:opacity-50"
+                    disabled={slots >= slotsLeft}
+                    className="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-white"
                   >
                     <Plus size={18} />
                   </button>
                 </div>
-
-                <div className="space-y-2 text-sm border-t border-gray-700 pt-3">
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-400">
-                      Price per{" "}
-                      {project.unit_name.charAt(0).toUpperCase() +
-                        project.unit_name.slice(1)}
-                    </span>
-                    <span className="text-white">
-                      ₦{pricePerSlot.toLocaleString()}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center pt-1">
-                    <span className="text-gray-300 font-bold">Total</span>
-                    <span className="text-xl font-bold text-farm-500">
-                      ₦{investmentTotal.toLocaleString()}
-                    </span>
-                  </div>
+                <div className="flex justify-between items-center pt-2 border-t border-gray-600">
+                  <span className="text-gray-400">Total</span>
+                  <span className="text-xl font-bold text-farm-500">
+                    ₦{investmentTotal.toLocaleString()}
+                  </span>
                 </div>
               </div>
 
               <Button
                 variant="primary"
-                className="w-full py-4 text-lg mb-3 flex justify-center"
+                className="w-full py-4 text-lg flex justify-center"
                 onClick={handleInvestClick}
-                disabled={
-                  investing || slotsLeft === 0 || project.status !== "open"
-                }
+                disabled={investing || slotsLeft === 0}
               >
                 {investing ? (
                   <Loader2 className="animate-spin" />

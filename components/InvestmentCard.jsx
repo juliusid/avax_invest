@@ -41,12 +41,16 @@ export const InvestmentCard = ({ project }) => {
 
         {/* ✅ FIXED: Uses real slotsLeft from backend */}
         <div className="absolute top-3 right-3 bg-farm-600/90 backdrop-blur-sm px-3 py-1 rounded-full border border-white/10 shadow-lg">
-          <span className="text-xs font-bold text-white flex items-center gap-1">
+          {/* <span className="text-xs font-bold text-white flex items-center gap-1">
             <Layers size={12} />
             {slotsLeft}{" "}
             {project.unit_name.charAt(0).toUpperCase() +
               project.unit_name.slice(1)}
             {slotsLeft && "s"} Left
+          </span> */}
+          <span className="text-xs font-bold text-white flex items-center gap-1 capitalize">
+            <Layers size={12} />
+            {slotsLeft} {project.unit_name || "unit"}s Left
           </span>
         </div>
       </div>
@@ -87,8 +91,9 @@ export const InvestmentCard = ({ project }) => {
           <div className="text-sm">
             <span className="text-gray-400 block text-xs">
               Per{" "}
-              {project.unit_name.charAt(0).toUpperCase() +
-                project.unit_name.slice(1)}
+              {/* {project.unit_name.charAt(0).toUpperCase() +
+                project.unit_name.slice(1)} */}
+              {slotsLeft} {project.unit_name || "unit"}s Left
             </span>
             <span className="font-semibold text-white">
               ₦{pricePerSlot.toLocaleString()}

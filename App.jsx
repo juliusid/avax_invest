@@ -25,6 +25,7 @@ import { About } from "./pages/About";
 import { Archives } from "./pages/Archives";
 import { ProjectDetails } from "./pages/ProjectDetails";
 import { Profile } from "./pages/Profile"; // ✅ NEW: Profile Page
+import { VerifyInvestment } from "./pages/VerifyInvestment.js";
 
 const AppContent = () => {
   const { user, logout } = useAuth(); // Keeps your real backend session
@@ -100,6 +101,8 @@ const AppContent = () => {
               path="/dashboard"
               element={user ? <Dashboard /> : <Navigate to="/" replace />}
             />
+
+            <Route path="/verify-investment" element={<VerifyInvestment />} />
           </Routes>
         </main>
 
