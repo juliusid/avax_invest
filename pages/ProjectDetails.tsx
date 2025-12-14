@@ -36,18 +36,20 @@ export const ProjectDetails: React.FC = () => {
   useEffect(() => {
     const fetchProject = async () => {
       try {
-        const { data } = await investmentApi.getOne(id);
+        // ✅ FIX: Use 'getById' instead of 'getOne'
+        const { data } = await investmentApi.getById(id);
+
         if (data.success) setProject(data.data.project);
       } catch (error) {
+        console.error("Load Error:", error); // See the real error in console
         showNotification("error", "Failed to load project details");
-        navigate("/invest");
+        // navigate("/invest"); // Optional: Comment this out while debugging so you don't get redirected
       } finally {
         setLoading(false);
       }
     };
     fetchProject();
   }, [id, navigate, showNotification]);
-
   if (loading)
     return (
       <div className="min-h-screen pt-32 text-center text-white">
