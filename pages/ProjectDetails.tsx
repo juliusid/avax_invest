@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { investmentApi } from "../api/investments"; // ✅ Make sure this imports correctly
+import { investmentApi } from "../api/investments";
 import { Button } from "../components/Button.jsx";
 import { useNotification } from "../contexts/NotificationContext";
+import { useAuth } from "../contexts/AuthContext"; // ✅ New Import
+import { usePaystackPayment } from "react-paystack"; // ✅ New Import
 import {
   MapPin,
   ShieldCheck,
@@ -24,13 +26,14 @@ export const ProjectDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { showNotification } = useNotification();
+  const { user } = useAuth(); // ✅ Get user for email
 
   const [project, setProject] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [investing, setInvesting] = useState(false);
   const [slots, setSlots] = useState(1);
 
-  // 1. Fetch Real Data
+  // 1. Fetch Real Data (Keep logic as is)
   useEffect(() => {
     const fetchProject = async () => {
       try {
@@ -57,12 +60,9 @@ export const ProjectDetails: React.FC = () => {
     );
   if (!project) return null;
 
-  // 2. Real Calculations
-  // Backend sends: min_investment, total_slots, raised_amount, target_amount
+  // 2. Real Calculations (Keep logic as is)
   const pricePerSlot = parseFloat(project.min_investment || 0);
 
-  // Calculate Slots Left based on backend data
-  // If backend sends 'slots_left', use it. Otherwise calculate.
   const slotsSold = Math.floor(
     parseFloat(project.raised_amount) / pricePerSlot
   );
@@ -73,12 +73,11 @@ export const ProjectDetails: React.FC = () => {
 
   const investmentTotal = slots * pricePerSlot;
 
-  // Progress Calculation
   const progressPercent =
     (parseFloat(project.raised_amount) / parseFloat(project.target_amount)) *
     100;
 
-  // Handlers
+  // 3. Handlers (Slots logic)
   const incrementSlots = () => {
     if (slots < slotsLeft) setSlots((prev) => prev + 1);
   };
@@ -87,24 +86,80 @@ export const ProjectDetails: React.FC = () => {
     if (slots > 1) setSlots((prev) => prev - 1);
   };
 
-  const handleInvest = async () => {
+  // 4. Paystack Configuration
+  const config = {
+    // Unique reference ID
+    reference: new Date().getTime().toString(),
+    // Must use user's email for production
+    email: user?.email || "guest@farm.com",
+    // Amount in Kobo
+    amount: Math.round(investmentTotal * 100),
+    // !!! REPLACE THIS WITH YOUR REAL PUBLIC KEY !!!
+    publicKey:
+      process.env.VITE_PAYSTACK_PUBLIC_KEY || "pk_test_xxxxxxxxxxxxxxxxxxxx",
+    metadata: {
+      custom_fields: [
+        { display_name: "Project ID", variable_name: "project_id", value: id },
+      ],
+    },
+  };
+
+  // Initialize Paystack hook
+  const initializePayment = usePaystackPayment(config);
+
+  // 5. Paystack Success Callback
+  const onPaystackSuccess = async (reference: any) => {
     setInvesting(true);
+    showNotification(
+      "info",
+      "Payment received. Verifying transaction...",
+      "top-right"
+    );
     try {
+      // Send reference (proof of payment) to backend for verification
       const { data } = await investmentApi.invest({
         projectId: project.id,
         slots: slots,
+        paymentReference: reference.reference, // ✅ This is the crucial field
       });
 
       if (data.success) {
-        showNotification("success", "Investment Successful!");
+        showNotification(
+          "success",
+          data.message || "Investment successfully verified!",
+          "top-right"
+        );
         navigate("/dashboard");
       }
     } catch (error: any) {
-      const msg = error.response?.data?.message || "Investment failed.";
-      showNotification("error", msg);
+      const msg =
+        error.response?.data?.message ||
+        "Verification failed. Check your network.";
+      showNotification("error", msg, "top-right");
     } finally {
       setInvesting(false);
     }
+  };
+
+  // 6. Main Button Handler
+  const handleInvestClick = () => {
+    if (!user || !user.email) {
+      return showNotification(
+        "error",
+        "You must be logged in with a verified account to invest.",
+        "top-right"
+      );
+    }
+
+    // Disable interaction while Paystack is loading
+    setInvesting(true);
+
+    // Initialize the payment popup
+    initializePayment(
+      onPaystackSuccess,
+      // On Close Callback
+      () => setInvesting(false)
+    );
   };
 
   return (
@@ -230,7 +285,7 @@ export const ProjectDetails: React.FC = () => {
                 </div>
               </div>
 
-              {/* ✅ SLOT SELECTOR UI */}
+              {/* SLOT SELECTOR UI */}
               <div className="bg-gray-700/30 rounded-lg p-4 mb-6 border border-gray-700">
                 <div className="flex justify-between items-center mb-3">
                   <span className="text-gray-300 font-medium">
@@ -246,7 +301,7 @@ export const ProjectDetails: React.FC = () => {
                 <div className="flex items-center justify-between bg-gray-900 rounded-lg p-1 border border-gray-600 mb-4">
                   <button
                     onClick={decrementSlots}
-                    disabled={slots <= 1}
+                    disabled={slots <= 1 || investing}
                     className="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-white hover:bg-gray-800 rounded-md transition-colors disabled:opacity-50"
                   >
                     <Minus size={18} />
@@ -256,7 +311,7 @@ export const ProjectDetails: React.FC = () => {
                   </div>
                   <button
                     onClick={incrementSlots}
-                    disabled={slots >= slotsLeft}
+                    disabled={slots >= slotsLeft || investing}
                     className="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-white hover:bg-gray-800 rounded-md transition-colors disabled:opacity-50"
                   >
                     <Plus size={18} />
@@ -285,8 +340,8 @@ export const ProjectDetails: React.FC = () => {
 
               <Button
                 variant="primary"
-                className="w-full py-4 text-lg mb-3"
-                onClick={handleInvest}
+                className="w-full py-4 text-lg mb-3 flex justify-center"
+                onClick={handleInvestClick}
                 disabled={
                   investing || slotsLeft === 0 || project.status !== "open"
                 }
