@@ -13,4 +13,10 @@ export const investmentApi = {
   // Invest
   initialize: (data) => api.post("/investments/initialize", data),
   verify: (data) => api.post("/investments/verify", data),
+  getDetails: (id) => api.get(`/investments/details/${id}`),
+  // Request a withdrawal
+  requestWithdrawal: (data) => api.post("/payouts", data),
+
+  // List withdrawal history
+  getPayoutHistory: () => api.get("/payouts"),
 };
