@@ -11,10 +11,10 @@ import {
   ShieldCheck,
   Banknote,
 } from "lucide-react";
-import { Button } from "../components/Button.jsx";
-import { MOCK_PROJECTS } from "../constants";
-import { InvestmentCard } from "../components/InvestmentCard";
-import { FieldArchives } from "../components/FieldArchives";
+import { Button } from "../components/Button.js";
+import { MOCK_PROJECTS } from "../constants.js";
+import { InvestmentCard } from "../components/InvestmentCard.jsx";
+import { FieldArchives } from "../components/FieldArchives.jsx";
 
 export const Home: React.FC = () => {
   // Get featured projects (limit to first 3)

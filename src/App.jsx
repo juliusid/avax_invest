@@ -18,13 +18,13 @@ import { AuthProvider, useAuth } from "./contexts/AuthContext.jsx";
 import { NotificationProvider } from "./contexts/NotificationContext"; // ✅ NEW: Notification Logic
 
 // --- Pages ---
-import { Home } from "./pages/Home";
-import { Invest } from "./pages/Invest.jsx";
-import { Dashboard } from "./pages/Dashboard.jsx";
-import { About } from "./pages/About";
-import { Archives } from "./pages/Archives";
-import { ProjectDetails } from "./pages/ProjectDetails";
-import { Profile } from "./pages/Profile"; // ✅ NEW: Profile Page
+import { Home } from "./pages/Home.js";
+import { Invest } from "./pages/Invest.js";
+import { Dashboard } from "./pages/Dashboard.js";
+import { About } from "./pages/About.js";
+import { Archives } from "./pages/Archives.js";
+import { ProjectDetails } from "./pages/ProjectDetails.js";
+import { Profile } from "./pages/Profile.jsx"; // ✅ NEW: Profile Page
 import { VerifyInvestment } from "./pages/VerifyInvestment.js";
 
 const AppContent = () => {

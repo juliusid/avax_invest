@@ -61,7 +61,7 @@ export const ProjectDetails: React.FC = () => {
   // Calculations
   const pricePerSlot = parseFloat(project.min_investment || 0);
   const slotsSold = Math.floor(
-    parseFloat(project.raised_amount) / pricePerSlot
+    parseFloat(project.raised_amount) / pricePerSlot,
   );
   const slotsLeft =
     project.slots_left !== undefined

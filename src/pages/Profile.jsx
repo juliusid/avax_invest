@@ -132,7 +132,7 @@ export const Profile = () => {
         prev.map((doc) => ({
           ...doc,
           status: mappedUser.kycStatus === "Verified" ? "Verified" : doc.status,
-        }))
+        })),
       );
     } else if (user === null) {
       setIsRefreshing(false);
@@ -145,7 +145,7 @@ export const Profile = () => {
     if (!isEditing && profileData.kycStatus !== "Verified") {
       showNotification(
         "error",
-        "Access Denied: You must complete KYC verification to edit your profile."
+        "Access Denied: You must complete KYC verification to edit your profile.",
       );
       return;
     }
@@ -183,7 +183,7 @@ export const Profile = () => {
       reader.readAsDataURL(file);
       showNotification(
         "info",
-        'New profile picture selected. Click "Save Changes" to upload it.'
+        'New profile picture selected. Click "Save Changes" to upload it.',
       );
     }
   };
@@ -225,7 +225,7 @@ export const Profile = () => {
     } catch (error) {
       showNotification(
         "error",
-        error.message || "An error occurred while saving profile."
+        error.message || "An error occurred while saving profile.",
       );
     } finally {
       setIsLoading(false);
@@ -273,11 +273,11 @@ export const Profile = () => {
           setIsEditing(false);
           showNotification(
             "success",
-            "Identity Verified. Contact details updated."
+            "Identity Verified. Contact details updated.",
           );
         } else {
           throw new Error(
-            response.message || "Profile update failed after verification."
+            response.message || "Profile update failed after verification.",
           );
         }
       } else if (otpContext.type === "password_change") {
@@ -290,11 +290,11 @@ export const Profile = () => {
           setPasswordForm({ current: "", new: "", confirm: "" });
           showNotification(
             "success",
-            "Identity Verified. Password changed successfully."
+            "Identity Verified. Password changed successfully.",
           );
         } else {
           throw new Error(
-            response.message || "Password change failed after verification."
+            response.message || "Password change failed after verification.",
           );
         }
       }
@@ -305,7 +305,7 @@ export const Profile = () => {
     } catch (error) {
       showNotification(
         "error",
-        error.message || "An error occurred during verification/save."
+        error.message || "An error occurred during verification/save.",
       );
     } finally {
       setIsVerifyingOtp(false);
@@ -339,12 +339,12 @@ export const Profile = () => {
                     status: "Pending",
                     date: new Date().toLocaleDateString(),
                   }
-                : doc
-            )
+                : doc,
+            ),
           );
           showNotification(
             "success",
-            "Document uploaded. Status: Pending Review."
+            "Document uploaded. Status: Pending Review.",
           );
         } else {
           throw new Error(response.message || "Document upload failed.");
@@ -352,7 +352,7 @@ export const Profile = () => {
       } catch (error) {
         showNotification(
           "error",
-          error.message || "An error occurred during file upload."
+          error.message || "An error occurred during file upload.",
         );
       } finally {
         setIsLoading(false);
@@ -859,7 +859,7 @@ export const Profile = () => {
                               "info",
                               new2FAState
                                 ? "2FA Enabled successfully (MOCK)"
-                                : "2FA Disabled (MOCK)"
+                                : "2FA Disabled (MOCK)",
                             );
                           }}
                         />

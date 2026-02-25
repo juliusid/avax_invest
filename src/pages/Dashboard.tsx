@@ -184,11 +184,11 @@ export const Dashboard: React.FC = () => {
         setStats({
           totalValue: investments.reduce(
             (acc: any, curr: any) => acc + parseFloat(curr.amount_invested),
-            0
+            0,
           ),
           totalYield: investments.reduce(
             (acc: any, curr: any) => acc + parseFloat(curr.expected_roi),
-            0
+            0,
           ),
           activeProjects: investments.filter((i: any) => i.status === "active")
             .length,
@@ -412,7 +412,7 @@ export const Dashboard: React.FC = () => {
                   <div className="relative mb-8 pl-2">
                     {STAGES.map((stage, idx) => {
                       const currentIdx = STAGES.indexOf(
-                        selectedInv.FarmProject?.current_stage || "funding"
+                        selectedInv.FarmProject?.current_stage || "funding",
                       );
                       return (
                         <div
@@ -539,7 +539,7 @@ export const Dashboard: React.FC = () => {
                       <p className="text-xs font-bold text-farm-500 mb-2 uppercase tracking-widest">
                         {new Date(update.update_date).toLocaleDateString(
                           undefined,
-                          { dateStyle: "long" }
+                          { dateStyle: "long" },
                         )}
                       </p>
                       <h4 className="text-xl font-bold text-white mb-3">
@@ -556,7 +556,7 @@ export const Dashboard: React.FC = () => {
                         {update.content}
                       </p>
                     </div>
-                  )
+                  ),
                 )
               ) : (
                 <div className="text-center py-20">

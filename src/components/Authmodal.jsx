@@ -11,9 +11,9 @@ import {
   ShieldCheck,
   ChevronRight,
 } from "lucide-react";
-import { Button } from "./Button.jsx";
+import { Button } from "./Button.js";
 import { useAuth } from "../contexts/AuthContext.jsx";
-import { useNotification } from "../contexts/NotificationContext"; // ✅ 1. Import Notification Hook
+import { useNotification } from "../contexts/NotificationContext.jsx"; // ✅ 1. Import Notification Hook
 
 export const AuthModal = ({
   isOpen,
@@ -118,7 +118,7 @@ export const AuthModal = ({
       // ✅ 5. Show Success Toast
       showNotification(
         "success",
-        "Account created! Please verify your details."
+        "Account created! Please verify your details.",
       );
 
       // Trigger verification flow

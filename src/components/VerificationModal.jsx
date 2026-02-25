@@ -45,7 +45,7 @@ export const VerificationModal = ({ isOpen, onClose, email, phone }) => {
       }
     } catch (err) {
       setError(
-        err.response?.data?.message || "Verification failed. Try again."
+        err.response?.data?.message || "Verification failed. Try again.",
       );
     } finally {
       setIsLoading(false);

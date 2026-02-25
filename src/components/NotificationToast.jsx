@@ -14,8 +14,8 @@ export const NotificationToast = () => {
             notification.type === "success"
               ? "bg-gray-800 border-green-500 text-green-500"
               : notification.type === "error"
-              ? "bg-gray-800 border-red-500 text-red-500"
-              : "bg-gray-800 border-blue-500 text-blue-500"
+                ? "bg-gray-800 border-red-500 text-red-500"
+                : "bg-gray-800 border-blue-500 text-blue-500"
           }`}
         >
           {notification.type === "success" && <CheckCircle size={20} />}

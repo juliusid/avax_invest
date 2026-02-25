@@ -3,7 +3,7 @@ import axios from "axios";
 // Create a centralized axios instance
 const api = axios.create({
   // Point this to your backend server URL
-  baseURL: "http://localhost:5000/api",
+  baseURL: "https://avaxmarketplacepro-production.up.railway.app/api",
   // CRITICAL: This allows cookies (accessToken) to be sent/received
   withCredentials: true,
   headers: {

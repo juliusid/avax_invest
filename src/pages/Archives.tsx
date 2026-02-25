@@ -171,8 +171,8 @@ export const Archives: React.FC = () => {
                   item.size === "wide"
                     ? "md:col-span-2"
                     : item.size === "tall"
-                    ? "md:col-span-1 md:row-span-2"
-                    : "md:col-span-1"
+                      ? "md:col-span-1 md:row-span-2"
+                      : "md:col-span-1"
                 }`}
               >
                 <img

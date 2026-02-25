@@ -9,7 +9,7 @@ export const VerifyInvestment = () => {
   const navigate = useNavigate();
   const { showNotification } = useNotification();
   const [status, setStatus] = useState<"verifying" | "success" | "error">(
-    "verifying"
+    "verifying",
   );
 
   useEffect(() => {

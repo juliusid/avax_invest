@@ -1,6 +1,6 @@
 import React from "react";
 import { MapPin, TrendingUp, Clock, ArrowRight, Layers } from "lucide-react";
-import { Button } from "./Button.jsx";
+import { Button } from "./Button.js";
 
 // Helper to ensure image URLs are correct
 const getImageUrl = (url) => {
@@ -14,7 +14,7 @@ export const InvestmentCard = ({ project }) => {
   // The backend sends 'min_investment', 'roi_percentage', 'duration_months'
   const pricePerSlot = parseFloat(project.min_investment || 0);
   const slotsSold = Math.floor(
-    parseFloat(project.raised_amount) / pricePerSlot
+    parseFloat(project.raised_amount) / pricePerSlot,
   );
   const slotsLeft =
     project.slots_left !== undefined
