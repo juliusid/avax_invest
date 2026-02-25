@@ -4,7 +4,7 @@ import { Button } from "./Button.js";
 
 // Helper to ensure image URLs are correct
 const getImageUrl = (url) => {
-  if (!url) return "https://via.placeholder.com/400x300?text=No+Image";
+  // if (!url) return "https://via.placeholder.com/400x300?text=No+Image";
   if (url.startsWith("http")) return url;
   return `http://localhost:5000${url}`;
 };
@@ -28,9 +28,9 @@ export const InvestmentCard = ({ project }) => {
           src={getImageUrl(project.image_url)}
           alt={project.title}
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-          onError={(e) => {
-            e.target.src = "https://via.placeholder.com/400x300?text=Error";
-          }}
+          // onError={(e) => {
+          //   e.target.src = "https://via.placeholder.com/400x300?text=Error";
+          // }}
         />
 
         <div className="absolute top-3 left-3 bg-black/60 backdrop-blur-sm px-3 py-1 rounded-full border border-white/10">

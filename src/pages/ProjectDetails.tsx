@@ -16,7 +16,7 @@ import {
 
 // Image Helper
 const getImageUrl = (url: string) => {
-  if (!url) return "https://via.placeholder.com/800x600?text=No+Image";
+  // if (!url) return "https://via.placeholder.com/800x600?text=No+Image";
   if (url.startsWith("http")) return url;
   return `http://localhost:5000${url}`;
 };
