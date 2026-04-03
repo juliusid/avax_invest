@@ -1,6 +1,6 @@
 import React from "react";
 import { MapPin, TrendingUp, Clock, ArrowRight, Layers } from "lucide-react";
-import { Button } from "./Button.js";
+import { Button } from "./Button";
 
 // Helper to ensure image URLs are correct
 const getImageUrl = (url) => {
@@ -9,7 +9,7 @@ const getImageUrl = (url) => {
   return `http://localhost:5000${url}`;
 };
 
-export const InvestmentCard = ({ project }) => {
+export const InvestmentCard: React.FC<{ project: any }> = ({ project }) => {
   // 1. Map Real Backend Data
   // The backend sends 'min_investment', 'roi_percentage', 'duration_months'
   const pricePerSlot = parseFloat(project.min_investment || 0);

@@ -48,7 +48,7 @@ export const About: React.FC = () => {
         <div className="grid md:grid-cols-2 gap-16 items-center">
           <div>
             <h2 className="text-3xl font-bold text-white mb-6">
-              Democratizing Land Ownership
+              Democratizing Farm Ownership
             </h2>
             <div className="space-y-6 text-gray-400 leading-relaxed">
               <p>
@@ -157,6 +157,34 @@ export const About: React.FC = () => {
                 and creating jobs, strengthening rural economies.
               </p>
             </div>
+
+            <div className="bg-gray-900 p-8 rounded-xl border border-gray-700/50 hover:border-orange-500/30 transition-colors group">
+              <div className="w-12 h-12 bg-orange-500/10 rounded-lg flex items-center justify-center text-orange-500 mb-6 group-hover:scale-110 transition-transform">
+                <TrendingUp size={24} />
+              </div>
+              <h3 className="text-xl font-bold text-white mb-3">
+                Grower‑First Accountability
+              </h3>
+              <p className="text-gray-400">
+                Payouts depend on harvest success, so we pick farms, inputs, and
+                buyers conservatively, then share field data weekly. Keeps
+                incentives aligned: if growers win, investors win.
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-16 p-8 bg-farm-900/30 rounded-2xl border border-farm-500/20 text-center max-w-4xl mx-auto">
+            <h3 className="text-2xl font-bold text-white mb-4">
+              ROI & Payout Policy
+            </h3>
+            <p className="text-gray-300 leading-relaxed">
+              ROI is promised if the project hits plan. Payout depends on actual
+              harvest because that’s the cash‑source: we select
+              high‑confidence farms, lock off‑take buyers, and hold a
+              reserve/insurance buffer. If yields miss, buffer covers investors
+              first; if still short, the shortfall hits pro rata. Stiff
+              due‑diligence + transparency keep exceptions rare.
+            </p>
           </div>
         </div>
       </section>
@@ -174,7 +202,7 @@ export const About: React.FC = () => {
           {[
             {
               name: "Sarah Jenkins",
-              role: "CEO & Co-Founder",
+              role: "MD & Co-Founder",
               img: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=1000&auto=format&fit=crop",
             },
             {

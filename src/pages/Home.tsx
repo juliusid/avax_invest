@@ -10,11 +10,12 @@ import {
   Sprout,
   ShieldCheck,
   Banknote,
+  FileText,
 } from "lucide-react";
-import { Button } from "../components/Button.js";
-import { MOCK_PROJECTS } from "../constants.js";
-import { InvestmentCard } from "../components/InvestmentCard.jsx";
-import { FieldArchives } from "../components/FieldArchives.jsx";
+import { Button } from "../components/Button";
+import { MOCK_PROJECTS } from "../constants";
+import { InvestmentCard } from "../components/InvestmentCard";
+import { FieldArchives } from "../components/FieldArchives";
 
 export const Home: React.FC = () => {
   // Get featured projects (limit to first 3)
@@ -219,6 +220,106 @@ export const Home: React.FC = () => {
                 Receive annual cash payouts from harvest yields and capital
                 appreciation when the property is eventually sold.
               </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Franchise Model Section */}
+      <section className="py-24 bg-farm-500/5 border-y border-gray-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <span className="text-farm-500 font-semibold tracking-wider uppercase text-sm">
+              Partnership Opportunities
+            </span>
+            <h2 className="text-3xl md:text-5xl font-bold text-white mt-2 mb-4">
+              AVAX FARMS STOCK – FRANCHISE MODEL
+            </h2>
+            <p className="text-gray-400 max-w-2xl mx-auto">
+              Our franchise model involves a public-private partnership where
+              landlords, state governments, or large farm owners can partner
+              with Avax Farm Stock to develop and manage farming projects on
+              their land.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-5xl mx-auto">
+            {/* Option 1 */}
+            <div className="bg-gray-900 p-8 rounded-2xl border border-gray-700 hover:border-farm-500/30 transition-all group">
+              <div className="w-16 h-16 bg-farm-500/10 rounded-xl flex items-center justify-center text-farm-500 mb-6 group-hover:scale-110 transition-transform">
+                <Banknote size={32} />
+              </div>
+              <h3 className="text-2xl font-bold text-white mb-4">
+                Option 1 – Purchase
+              </h3>
+              <p className="text-gray-400 mb-6 leading-relaxed">
+                Partner purchases site franchise shares &rarr; 30% equity, AVAX
+                70%.
+              </p>
+              <ul className="text-gray-500 space-y-2 text-sm">
+                <li className="flex items-center gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-farm-500"></div>
+                  Purchase Site Franchise
+                </li>
+                <li className="flex items-center gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-farm-500"></div>
+                  30% Partner Equity
+                </li>
+              </ul>
+            </div>
+
+            {/* Option 2 */}
+            <div className="bg-gray-900 p-8 rounded-2xl border border-gray-700 hover:border-farm-500/30 transition-all group">
+              <div className="w-16 h-16 bg-farm-500/10 rounded-xl flex items-center justify-center text-farm-500 mb-6 group-hover:scale-110 transition-transform">
+                <ShieldCheck size={32} />
+              </div>
+              <h3 className="text-2xl font-bold text-white mb-4">
+                Option 2 – Lease‑in
+              </h3>
+              <p className="text-gray-400 mb-6 leading-relaxed">
+                No franchise fee &rarr; Partner gets 15% equity, AVAX 85%;
+                Partner equity sellable at cycle‑end (AVAX ROFR).
+              </p>
+              <ul className="text-gray-500 space-y-2 text-sm">
+                <li className="flex items-center gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-farm-500"></div>
+                  No Upfront Franchise Fee
+                </li>
+                <li className="flex items-center gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-farm-500"></div>
+                  15% Partner Equity
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="mt-16 text-center">
+            <div className="bg-gray-800/20 p-8 rounded-2xl border border-gray-700 max-w-3xl mx-auto inline-block text-left">
+              <h4 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                <Globe className="text-farm-500" size={24} />
+                Common Benefits
+              </h4>
+              <p className="text-gray-400 mb-6 leading-relaxed">
+                Avax lists the farm, raises crowd‑funding, manages operations,
+                and handles payout. Benefit: your land works, you earn passive
+                share, we bring capital + expertise.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Button variant="primary" className="px-8 py-3">
+                  Partner with us
+                </Button>
+                <a
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    alert("Partnership Contract Terms PDF coming soon!");
+                  }}
+                  className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors px-6 py-3 border border-gray-700 rounded-lg text-sm font-medium"
+                >
+                  <FileText size={18} />
+                  Download Contract Terms
+                </a>
+              </div>
             </div>
           </div>
         </div>

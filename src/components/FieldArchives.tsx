@@ -2,7 +2,7 @@ import React from "react";
 import { Play, ArrowUpRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
-export const FieldArchives = () => {
+export const FieldArchives: React.FC = () => {
   return (
     <section
       id="archives"

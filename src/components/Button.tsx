@@ -1,7 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-export const Button = ({
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: "primary" | "secondary" | "outline" | "ghost";
+  to?: string;
+  href?: string;
+}
+
+export const Button: React.FC<ButtonProps> = ({
   variant = "primary",
   children,
   className = "",
